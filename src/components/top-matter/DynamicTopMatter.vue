@@ -1,6 +1,10 @@
 <template>
   <div class="dtm-container" v-if="currentmatter || viewName">
     <div v-if="viewName" class="header">{{ viewName }}</div>
+    <div v-if="viewsubTitle" class="subtitle">
+      <MapMarkerOutlineIcon class="icon"></MapMarkerOutlineIcon>
+      <span>{{ viewsubTitle }}</span>
+    </div>
     <component ref="child" v-if="currentmatter" :is="currentmatter" @load="$emit('load')" />
   </div>
 </template>
@@ -13,6 +17,7 @@ import UserMixin from '@mixins/UserConfig';
 import FolderDynamicTopMatter from './FolderDynamicTopMatter.vue';
 import PlacesDynamicTopMatterVue from './PlacesDynamicTopMatter.vue';
 import OnThisDay from './OnThisDay.vue';
+import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue';
 
 import * as strings from '@services/strings';
 
@@ -21,6 +26,10 @@ import './PublicShareHeader';
 
 export default defineComponent({
   name: 'DynamicTopMatter',
+
+  components: {
+    MapMarkerOutlineIcon,
+  },
 
   mixins: [UserMixin],
 
@@ -67,6 +76,11 @@ export default defineComponent({
 
       return strings.viewName(this.$route.name!);
     },
+
+    /** Get view subtitle for dynamic top matter */
+    viewsubTitle(): string {
+      return this.$route.params.location ?? String();
+    },
   },
 
   methods: {
@@ -101,6 +115,20 @@ export default defineComponent({
         padding: 25px 30px 7px 18px;
       }
     }
+  }
+
+  > .subtitle {
+    font-size: 1.2em;
+    line-height: 1.2em;
+    font-style: italic;
+    color: var(--color-text-lighter);
+    display: flex;
+
+    margin-left: 15px;
+  }
+
+  .icon {
+    margin-right: 5px;
   }
 }
 </style>
