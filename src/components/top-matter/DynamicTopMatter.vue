@@ -1,6 +1,18 @@
 <template>
   <div class="dtm-container" v-if="currentmatter || viewName">
     <div v-if="viewName" class="header">{{ viewName }}</div>
+
+    <div class="avatars">
+      <NcAvatar
+        v-for="c of collaborators"
+        :key="c"
+        :user="c"
+        :displayName="c"
+        :showUserStatus="false"
+        :disableMenu="false"
+      />
+    </div>
+
     <component ref="child" v-if="currentmatter" :is="currentmatter" @load="$emit('load')" />
   </div>
 </template>
@@ -14,6 +26,8 @@ import FolderDynamicTopMatter from './FolderDynamicTopMatter.vue';
 import PlacesDynamicTopMatterVue from './PlacesDynamicTopMatter.vue';
 import OnThisDay from './OnThisDay.vue';
 
+const NcAvatar = () => import('@nextcloud/vue/dist/Components/NcAvatar.js');
+
 import * as strings from '@services/strings';
 
 // Auto-hide top header on public shares if redundant
@@ -21,6 +35,10 @@ import './PublicShareHeader';
 
 export default defineComponent({
   name: 'DynamicTopMatter',
+
+  components: {
+    NcAvatar,
+  },
 
   mixins: [UserMixin],
 
@@ -33,6 +51,13 @@ export default defineComponent({
       return this.$refs as {
         child?: { refresh?(): Promise<boolean> };
       };
+    },
+
+    collaborators(): string[] {
+      const unknown = this.$route.params.collaborators as unknown;
+      const rv: string[] = (unknown as string[]) ?? [];
+      rv.unshift(this.$route.params.user);
+      return rv;
     },
 
     currentmatter(): Component | null {
@@ -101,6 +126,12 @@ export default defineComponent({
         padding: 25px 30px 7px 18px;
       }
     }
+  }
+
+  > .avatars {
+    line-height: 1.2em;
+    margin-top: 0.5em;
+    padding-left: 10px;
   }
 }
 </style>
