@@ -98,7 +98,7 @@ export default defineComponent({
             user: this.data.user_display || this.data.user,
           });
           text = `${text} / ${sharer}`;
-        } else if (this.data.shared) {
+        } else if (this.data.collaborators.length > 0) {
           text += ' | ' + this.t('memories', 'Shared Album');
         }
 
@@ -114,6 +114,7 @@ export default defineComponent({
 
     /** Target URL to navigate to */
     target() {
+      console.log('target...');
       if (!this.link || this.plus) return {};
       return dav.getClusterLinkTarget(this.data);
     },

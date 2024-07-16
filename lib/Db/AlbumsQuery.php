@@ -88,12 +88,18 @@ class AlbumsQuery
         // FETCH all albums
         $albums = $query->executeQuery()->fetchAll();
 
-        // Additionally fetch all shared album ids
+        // Additionally SELECT all album collaborators
         $queryShared = $this->connection->getQueryBuilder();
-        $queryShared->select('album_id')->from($this->collaboratorsTable());
-        $shared_ids = array_map(function($row) {
-            return (int)$row['album_id'];
-        }, $queryShared->executeQuery()->fetchAll());
+        $queryShared->select(
+            'pc.album_id',
+            'pc.collaborator_id',
+        )->from($this->collaboratorsTable(), 'pc');
+        $query_res = $queryShared->executeQuery()->fetchAll();
+        $albums_collabs = [];
+        foreach ($query_res as $row) {
+            $albums_collabs[$row['album_id']][] = $row['collaborator_id'];
+        }
+        // file_put_contents('myphp.log', json_encode($albums_collabs, JSON_PRETTY_PRINT));
 
         // Post process
         foreach ($albums as &$row) {
@@ -101,7 +107,7 @@ class AlbumsQuery
             $row['album_id'] = (int) $row['album_id'];
             $row['created'] = (int) $row['created'];
             $row['last_added_photo'] = (int) $row['last_added_photo'];
-            $row['shared'] = in_array($row['album_id'], $shared_ids, true);
+            $row['collaborators'] = $albums_collabs[$row['album_id']] ?? [];
         }
 
         return $albums;

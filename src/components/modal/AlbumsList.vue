@@ -115,7 +115,7 @@ export default defineComponent({
           this.t('memories', 'Shared by {user}', {
             user: album.user_display || album.user,
           });
-      } else if (album.shared) {
+      } else if (album.collaborators.length > 0) {
         text += ' | ' + this.t('memories', 'Shared Album');
       }
 

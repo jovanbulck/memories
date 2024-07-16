@@ -53,9 +53,11 @@ export function getClusterPreview(cluster: ICluster, size = 512) {
  * @returns {string} The target route name and params for the cluster
  */
 export function getClusterLinkTarget(cluster: ICluster) {
+  console.log('cluster getting');
+  console.log(cluster);
   if (clusterIs.album(cluster)) {
-    const { user, name, location } = cluster;
-    return { name: _m.routes.Albums.name, params: { user, name, location } };
+    const { user, name, location, collaborators } = cluster;
+    return { name: _m.routes.Albums.name, params: { user, name, location, collaborators } };
   }
 
   if (clusterIs.face(cluster)) {

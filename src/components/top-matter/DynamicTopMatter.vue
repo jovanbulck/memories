@@ -1,10 +1,28 @@
 <template>
   <div class="dtm-container" v-if="currentmatter || viewName">
     <div v-if="viewName" class="header">{{ viewName }}</div>
+
+    <div v-if="viewsubTitle" class="subtitle">
+      <CalendarRangeIcon class="icon"></CalendarRangeIcon>
+      <span>Jun 2012 - Oct 2015</span>
+    </div>
+
     <div v-if="viewsubTitle" class="subtitle">
       <MapMarkerOutlineIcon class="icon"></MapMarkerOutlineIcon>
       <span>{{ viewsubTitle }}</span>
     </div>
+
+    <div class="avatars">
+      <NcAvatar
+        v-for="c of collaborators"
+        :key="c"
+        :user="c"
+        :displayName="c"
+        :showUserStatus="false"
+        :disableMenu="false"
+      />
+    </div>
+
     <component ref="child" v-if="currentmatter" :is="currentmatter" @load="$emit('load')" />
   </div>
 </template>
@@ -18,6 +36,10 @@ import FolderDynamicTopMatter from './FolderDynamicTopMatter.vue';
 import PlacesDynamicTopMatterVue from './PlacesDynamicTopMatter.vue';
 import OnThisDay from './OnThisDay.vue';
 import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue';
+import CalendarRangeIcon from 'vue-material-design-icons/CalendarRange.vue';
+
+// https://nextcloud-vue-components.netlify.app/#/Components/NcAvatar
+const NcAvatar = () => import('@nextcloud/vue/dist/Components/NcAvatar.js');
 
 import * as strings from '@services/strings';
 
@@ -29,6 +51,8 @@ export default defineComponent({
 
   components: {
     MapMarkerOutlineIcon,
+    CalendarRangeIcon,
+    NcAvatar,
   },
 
   mixins: [UserMixin],
@@ -42,6 +66,15 @@ export default defineComponent({
       return this.$refs as {
         child?: { refresh?(): Promise<boolean> };
       };
+    },
+
+    collaborators(): string[] {
+      console.log('collaborators');
+      const unknown = this.$route.params.collaborators as unknown;
+      const rv: string[] = (unknown as string[]) ?? [];
+      rv.unshift(this.$route.params.user);
+      console.log(rv);
+      return rv;
     },
 
     currentmatter(): Component | null {
@@ -79,6 +112,8 @@ export default defineComponent({
 
     /** Get view subtitle for dynamic top matter */
     viewsubTitle(): string {
+      console.log('route.params');
+      console.log(this.$route.params);
       return this.$route.params.location ?? String();
     },
   },
@@ -118,17 +153,22 @@ export default defineComponent({
   }
 
   > .subtitle {
-    font-size: 1.2em;
+    font-size: 1.1em;
     line-height: 1.2em;
-    font-style: italic;
+    margin-top: 0.5em;
     color: var(--color-text-lighter);
     display: flex;
-
-    margin-left: 15px;
+    padding-left: 10px;
   }
 
   .icon {
     margin-right: 5px;
+  }
+
+  > .avatars {
+    line-height: 1.2em;
+    margin-top: 0.5em;
+    padding-left: 10px;
   }
 }
 </style>
