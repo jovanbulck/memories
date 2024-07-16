@@ -2,6 +2,11 @@
   <div class="dtm-container" v-if="currentmatter || viewName">
     <div v-if="viewName" class="header">{{ viewName }}</div>
 
+    <div v-if="viewsubTitle" class="subtitle">
+      <MapMarkerOutlineIcon class="icon"></MapMarkerOutlineIcon>
+      <span>{{ viewsubTitle }}</span>
+    </div>
+
     <div class="avatars">
       <NcAvatar
         v-for="c of collaborators"
@@ -25,6 +30,7 @@ import UserMixin from '@mixins/UserConfig';
 import FolderDynamicTopMatter from './FolderDynamicTopMatter.vue';
 import PlacesDynamicTopMatterVue from './PlacesDynamicTopMatter.vue';
 import OnThisDay from './OnThisDay.vue';
+import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue';
 
 const NcAvatar = () => import('@nextcloud/vue/dist/Components/NcAvatar.js');
 
@@ -37,6 +43,7 @@ export default defineComponent({
   name: 'DynamicTopMatter',
 
   components: {
+    MapMarkerOutlineIcon,
     NcAvatar,
   },
 
@@ -92,6 +99,11 @@ export default defineComponent({
 
       return strings.viewName(this.$route.name!);
     },
+
+    /** Get view subtitle for dynamic top matter */
+    viewsubTitle(): string {
+      return this.$route.params.location ?? String();
+    },
   },
 
   methods: {
@@ -126,6 +138,19 @@ export default defineComponent({
         padding: 25px 30px 7px 18px;
       }
     }
+  }
+
+  > .subtitle {
+    font-size: 1.1em;
+    line-height: 1.2em;
+    margin-top: 0.5em;
+    color: var(--color-text-lighter);
+    display: flex;
+    padding-left: 10px;
+  }
+
+  .icon {
+    margin-right: 5px;
   }
 
   > .avatars {

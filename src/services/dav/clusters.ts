@@ -54,8 +54,8 @@ export function getClusterPreview(cluster: ICluster, size = 512) {
  */
 export function getClusterLinkTarget(cluster: ICluster) {
   if (clusterIs.album(cluster)) {
-    const { user, name, collaborators } = cluster;
-    return { name: _m.routes.Albums.name, params: { user, name, collaborators } };
+    const { user, name, location, collaborators } = cluster;
+    return { name: _m.routes.Albums.name, params: { user, name, location, collaborators } };
   }
 
   if (clusterIs.face(cluster)) {
