@@ -46,6 +46,8 @@ declare module '@typings' {
     last_added_photo_etag: string;
     /** Record ID of the latest update */
     update_id: number;
+    /** Collaborator IDs for this album */
+    collaborators: string[];
   }
 
   export interface IFace extends ICluster {

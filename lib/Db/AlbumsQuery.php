@@ -88,12 +88,25 @@ class AlbumsQuery
         // FETCH all albums
         $albums = $query->executeQuery()->fetchAll();
 
+        // Additionally SELECT all album collaborators
+        $queryCollabs = $this->connection->getQueryBuilder();
+        $queryCollabs->select(
+            'pc.album_id',
+            'pc.collaborator_id',
+        )->from($this->collaboratorsTable(), 'pc');
+        $query_res = $queryCollabs->executeQuery()->fetchAll();
+        $albums_collabs = [];
+        foreach ($query_res as $row) {
+            $albums_collabs[$row['album_id']][] = $row['collaborator_id'];
+        }
+
         // Post process
         foreach ($albums as &$row) {
             $row['cluster_id'] = $row['user'].'/'.$row['name'];
             $row['album_id'] = (int) $row['album_id'];
             $row['created'] = (int) $row['created'];
             $row['last_added_photo'] = (int) $row['last_added_photo'];
+            $row['collaborators'] = $albums_collabs[$row['album_id']] ?? [];
         }
 
         return $albums;
