@@ -1,23 +1,6 @@
 <template>
   <div class="dtm-container" v-if="currentmatter || viewName">
     <div v-if="viewName" class="header">{{ viewName }}</div>
-
-    <div v-if="viewsubTitle" class="subtitle">
-      <MapMarkerOutlineIcon class="icon"></MapMarkerOutlineIcon>
-      <span>{{ viewsubTitle }}</span>
-    </div>
-
-    <div class="avatars">
-      <NcAvatar
-        v-for="c of collaborators"
-        :key="c"
-        :user="c"
-        :displayName="c"
-        :showUserStatus="false"
-        :disableMenu="false"
-      />
-    </div>
-
     <component ref="child" v-if="currentmatter" :is="currentmatter" @load="$emit('load')" />
   </div>
 </template>
@@ -27,32 +10,17 @@ import { defineComponent, type Component } from 'vue';
 
 import UserMixin from '@mixins/UserConfig';
 
+import AlbumDynamicTopMatter from './AlbumDynamicTopMatter.vue';
 import FolderDynamicTopMatter from './FolderDynamicTopMatter.vue';
 import PlacesDynamicTopMatterVue from './PlacesDynamicTopMatter.vue';
 import OnThisDay from './OnThisDay.vue';
-import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue';
-
-const NcAvatar = () => import('@nextcloud/vue/dist/Components/NcAvatar.js');
-
-type Collaborator = {
-  id: string;
-  label: string;
-};
-
 import * as strings from '@services/strings';
-
-import * as dav from '@services/dav';
 
 // Auto-hide top header on public shares if redundant
 import './PublicShareHeader';
 
 export default defineComponent({
   name: 'DynamicTopMatter',
-
-  components: {
-    MapMarkerOutlineIcon,
-    NcAvatar,
-  },
 
   mixins: [UserMixin],
 
@@ -71,18 +39,13 @@ export default defineComponent({
       };
     },
 
-    collaborators(): string[] {
-      if (this.album) {
-        return [this.$route.params.user, ...this.album.collaborators.map((c: Collaborator) => c.id)];
-      }
-      return [];
-    },
-
     currentmatter(): Component | null {
       if (this.routeIsFolders || (this.routeIsFolderShare && this.initstate.shareType === 'folder')) {
         return FolderDynamicTopMatter;
       } else if (this.routeIsPlaces) {
         return PlacesDynamicTopMatterVue;
+      } else if (this.routeIsAlbums) {
+        return AlbumDynamicTopMatter;
       } else if (this.routeIsBase && this.config.enable_top_memories) {
         return OnThisDay;
       }
@@ -110,26 +73,10 @@ export default defineComponent({
 
       return strings.viewName(this.$route.name!);
     },
-
-    /** Get view subtitle for dynamic top matter */
-    viewsubTitle(): string {
-      if (this.album) {
-        return this.album.location ?? String();
-      }
-      return String();
-    },
   },
 
   methods: {
     async refresh(): Promise<boolean> {
-      if (this.routeIsAlbums) {
-        try {
-          this.album = await dav.getAlbum(this.$route.params.user, this.$route.params.name);
-        } catch (e) {
-          this.album = null;
-        }
-      }
-      
       if (this.currentmatter) {
         await this.$nextTick();
         return (await this.refs.child?.refresh?.()) ?? false;
@@ -160,25 +107,6 @@ export default defineComponent({
         padding: 25px 30px 7px 18px;
       }
     }
-  }
-
-  > .subtitle {
-    font-size: 1.1em;
-    line-height: 1.2em;
-    margin-top: 0.5em;
-    color: var(--color-text-lighter);
-    display: flex;
-    padding-left: 10px;
-  }
-
-  .icon {
-    margin-right: 5px;
-  }
-
-  > .avatars {
-    line-height: 1.2em;
-    margin-top: 0.5em;
-    padding-left: 10px;
   }
 }
 </style>
