@@ -34,7 +34,14 @@ import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue
 
 const NcAvatar = () => import('@nextcloud/vue/dist/Components/NcAvatar.js');
 
+type Collaborator = {
+  id: string;
+  label: string;
+};
+
 import * as strings from '@services/strings';
+
+import * as dav from '@services/dav';
 
 // Auto-hide top header on public shares if redundant
 import './PublicShareHeader';
@@ -53,6 +60,10 @@ export default defineComponent({
     load: () => true,
   },
 
+  data: () => ({
+    album: null as any,
+  }),
+
   computed: {
     refs() {
       return this.$refs as {
@@ -61,10 +72,10 @@ export default defineComponent({
     },
 
     collaborators(): string[] {
-      const unknown = this.$route.params.collaborators as unknown;
-      const rv: string[] = (unknown as string[]) ?? [];
-      rv.unshift(this.$route.params.user);
-      return rv;
+      if (this.album) {
+        return [this.$route.params.user, ...this.album.collaborators.map((c: Collaborator) => c.id)];
+      }
+      return [];
     },
 
     currentmatter(): Component | null {
@@ -102,12 +113,23 @@ export default defineComponent({
 
     /** Get view subtitle for dynamic top matter */
     viewsubTitle(): string {
-      return this.$route.params.location ?? String();
+      if (this.album) {
+        return this.album.location ?? String();
+      }
+      return String();
     },
   },
 
   methods: {
     async refresh(): Promise<boolean> {
+      if (this.routeIsAlbums) {
+        try {
+          this.album = await dav.getAlbum(this.$route.params.user, this.$route.params.name);
+        } catch (e) {
+          this.album = null;
+        }
+      }
+      
       if (this.currentmatter) {
         await this.$nextTick();
         return (await this.refs.child?.refresh?.()) ?? false;

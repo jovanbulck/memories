@@ -88,6 +88,8 @@ class AlbumsQuery
         // FETCH all albums
         $albums = $query->executeQuery()->fetchAll();
 
+        file_put_contents('myphp.log', json_encode($albums, JSON_PRETTY_PRINT), FILE_APPEND);
+
         // Additionally SELECT all album collaborators
         $queryCollabs = $this->connection->getQueryBuilder();
         $queryCollabs->select(
