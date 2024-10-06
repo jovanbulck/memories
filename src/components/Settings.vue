@@ -98,6 +98,15 @@
             >{{ t('memories', 'Never load high resolution image') }}
           </NcCheckboxRadioSwitch>
         </div>
+
+        <NcTextField
+          type="number"
+          label="On This Day Range"
+          :placeholder="String(config['on_this_day_range'])"
+          :label-visible="true"
+          :value="String(config['on_this_day_range'])"
+          @change="updateOnThisDayRange(Number($event.target.value))"
+        />
       </NcAppSettingsSection>
 
       <NcAppSettingsSection id="account-settings" :name="names.account" v-if="isNative">
@@ -342,6 +351,11 @@ export default defineComponent({
 
     async updateMetadataInSlideshow() {
       await this.updateSetting('metadata_in_slideshow', 'metadataInSlideshow');
+    },
+
+    async updateOnThisDayRange(value: number) {
+      this.config.on_this_day_range = value;
+      await this.updateSetting('on_this_day_range');
     },
 
     // Folders settings

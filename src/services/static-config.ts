@@ -141,6 +141,7 @@ class StaticConfig {
       livephoto_autoplay: true,
       sidebar_filepath: false,
       metadata_in_slideshow: false,
+      on_this_day_range: 3,
 
       // folder settings
       folders_path: '',

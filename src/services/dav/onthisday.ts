@@ -5,6 +5,8 @@ import { API } from '@services/API';
 
 import type { IDay, IPhoto } from '@typings';
 
+import staticConfig from '@services/static-config';
+
 /**
  * Get original onThisDay response.
  */
@@ -12,11 +14,12 @@ export async function getOnThisDayRaw() {
   const dayIds: number[] = [];
   const now = new Date();
   const nowUTC = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  const range = await staticConfig.get('on_this_day_range');
 
   // Populate dayIds
   for (let i = 1; i <= 120; i++) {
-    // +- 3 days from this day
-    for (let j = -3; j <= 3; j++) {
+    // +- configurable range from this day
+    for (let j = -range; j <= range; j++) {
       const d = new Date(nowUTC);
       d.setFullYear(d.getFullYear() - i);
       d.setDate(d.getDate() + j);

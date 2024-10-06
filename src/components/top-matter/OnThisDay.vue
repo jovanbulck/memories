@@ -5,7 +5,12 @@
         <XImg class="fill-block" :src="year.url" />
 
         <div class="overlay top-left fill-block">
-          {{ year.text }}
+          <div class="overlay-desc">
+            {{ year.desc }}
+          </div>
+          <div class="overlay-year">
+            {{ year.text }}
+          </div>
         </div>
       </div>
     </div>
@@ -37,10 +42,13 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
 
 import * as utils from '@services/utils';
 import * as dav from '@services/dav';
-import type { IPhoto } from '@typings';
+import type { IPhoto, IImageInfo } from '@typings';
 
 import LeftMoveIcon from 'vue-material-design-icons/ChevronLeft.vue';
 import RightMoveIcon from 'vue-material-design-icons/ChevronRight.vue';
+
+import axios from '@nextcloud/axios';
+import { API } from '@services/API';
 
 interface IYear {
   year: number;
@@ -48,6 +56,12 @@ interface IYear {
   preview: IPhoto;
   photos: IPhoto[];
   text: string;
+  desc: string;
+}
+
+function getRandomElem(arr: any) {
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
 }
 
 export default defineComponent({
@@ -144,6 +158,7 @@ export default defineComponent({
             this.years.push({
               year,
               text,
+              desc: '',
               url: '',
               preview: null!,
               photos: [],
@@ -176,6 +191,129 @@ export default defineComponent({
           photo: year.preview,
           msize: 512,
         });
+
+        // Array of synonyms that evoke nice memories
+        const synonyms = [
+          'Dreamy',
+          'Serene',
+          'Blissful',
+          'Tranquil',
+          'Joyful',
+          'Radiant',
+          'Whimsical',
+          'Charming',
+          'Enchanting',
+          'Delightful',
+          'Nostalgic',
+          'Peaceful',
+          'Harmonious',
+          'Magical',
+          'Wonderful',
+          'Lovely',
+          'Cheerful',
+          'Vibrant',
+          'Hopeful',
+          'Graceful',
+          'Breathtaking',
+          'Captivating',
+          'Idyllic',
+          'Refreshing',
+          'Comforting',
+          'Uplifting',
+          'Heartwarming',
+          'Inviting',
+          'Splendid',
+          'Radiating',
+          'Picturesque',
+          'Joyous',
+          'Sublime',
+          'Exquisite',
+          'Blissful',
+          'Content',
+          'Sweet',
+          'Gentle',
+          'Soothing',
+          'Luminous',
+          'Sparkling',
+          'Playful',
+          'Nostalgic',
+          'Wholesome',
+          'Fanciful',
+          'Dreamlike',
+          'Euphoric',
+          'Celebratory',
+          'Refreshing',
+          'Invigorating',
+        ];
+
+        const moments = [
+          'Instances',
+          'Occasions',
+          'Events',
+          'Times',
+          'Episodes',
+          'Intervals',
+          'Snaps',
+          'Recollections',
+          'Remembrances',
+          'Nostalgia',
+          'Impressions',
+          'Thoughts',
+          'Pictures',
+          'Images',
+          'Shots',
+          'Visuals',
+          'Portraits',
+          'Moments',
+          'Memories',
+          'Snapshots',
+          'Reflections',
+          'Reminiscences',
+          'Experiences',
+          'Photographs',
+          'Keepsakes',
+          'Souvenirs',
+          'Chronicles',
+          'Vignettes',
+          'Flashbacks',
+          'Treasures',
+          'Archives',
+          'Records',
+          'Scenes',
+          'Highlights',
+          'Journeys',
+          'Milestones',
+          'Echoes',
+          'Tales',
+          'Legacies',
+          'Fragments',
+          'Visions',
+          'Captures',
+          'Essences',
+          'Tokens',
+          'Mementos',
+          'Artifacts',
+          'Diaries',
+          'Journals',
+          'Pictorials',
+          'Nostalgia',
+          'Sentiments',
+          'Emotions',
+          'Glimpses',
+        ];
+
+        const url = API.Q(utils.getImageInfoUrl(year.preview), { tags: 1, clusters: 'recognize' });
+        const res = await axios.get<IImageInfo>(url);
+        const syn = getRandomElem(synonyms);
+        let subst = '';
+        if (res.data.clusters?.recognize && res.data.clusters.recognize.length > 0) {
+          console.log(res.data.clusters.recognize);
+          subst = getRandomElem(res.data.clusters.recognize).name;
+        } else if (res.data.tags) {
+          const filteredArray = Object.values(res.data.tags);
+          subst = filteredArray.length > 0 ? getRandomElem(filteredArray) : getRandomElem(moments);
+        }
+        year.desc = `${syn} ${subst}`;
       }
 
       await this.$nextTick();
@@ -300,14 +438,22 @@ $mobHeight: 165px;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     display: flex;
-    align-items: end;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
     color: white;
-    font-size: 1.2em;
     padding: 5%;
     white-space: normal;
     cursor: inherit;
     transition: background-color 0.2s ease-in-out;
+  }
+
+  .overlay-desc {
+    font-size: 1.2em;
+  }
+
+  .overlay-year {
+    font-size: 1em;
   }
 
   &:hover .overlay {
@@ -318,7 +464,13 @@ $mobHeight: 165px;
     aspect-ratio: 3/4;
     height: $mobHeight;
     .overlay {
-      font-size: 1.1em;
+      font-size: 1em;
+    }
+    .overlay-desc {
+      font-size: 1em;
+    }
+    .overlay-year {
+      font-size: 0.9em;
     }
   }
 }
