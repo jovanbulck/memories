@@ -28,6 +28,9 @@ declare module '@typings' {
     livephoto_autoplay: boolean;
     sidebar_filepath: boolean;
     metadata_in_slideshow: boolean;
+
+    // on this day settings
+    on_this_day_desc: boolean;
     on_this_day_range: number;
 
     // folder settings
