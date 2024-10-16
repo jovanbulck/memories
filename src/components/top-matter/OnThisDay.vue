@@ -175,8 +175,6 @@ export default defineComponent({
       }
 
       const desc_en = await staticConfig.get('on_this_day_desc');
-      let usedsynonyms: string[] = [];
-      let usednouns: string[] = [];
 
       // TODO move this to translations
       const synonyms = [
@@ -286,6 +284,7 @@ export default defineComponent({
         'Emotions',
         'Glimpses',
       ];
+      const rand_once = utils.createRandomChoiceOnce();
 
       // Choose preview photo
       for (const year of this.years) {
@@ -306,13 +305,13 @@ export default defineComponent({
         if (desc_en) {
           const url = API.Q(utils.getImageInfoUrl(year.preview), { tags: 1, clusters: 'recognize' });
           const res = await axios.get<IImageInfo>(url);
-          let noun = '';
-          if (res.data.clusters?.recognize?.length) {
-            noun = utils.randomChoice(res.data.clusters.recognize).name;
-          } else if (res.data.tags && Object.values(res.data.tags).length > 0) {
-            noun = utils.randomChoice(Object.values(res.data.tags));
-          } else noun = utils.randomChoiceUsed(moments, usednouns);
-          const syn = utils.randomChoiceUsed(synonyms, usedsynonyms);
+          let noun = null;
+          if (res.data.clusters?.recognize)
+            noun = rand_once(res.data.clusters.recognize.map((cluster) => cluster.name));
+          if (!noun && res.data.tags) noun = rand_once(Object.values(res.data.tags));
+          if (!noun && res.data.address) noun = rand_once(res.data.address.split(','));
+          if (!noun) noun = rand_once(moments) || utils.randomChoice(moments);
+          const syn = rand_once(synonyms) || utils.randomChoice(synonyms);
           year.desc = `${syn} ${noun}`;
         }
       }
@@ -447,6 +446,7 @@ $mobHeight: 165px;
     white-space: normal;
     cursor: inherit;
     transition: background-color 0.2s ease-in-out;
+    font-weight: 500;
   }
 
   .overlay-year {

@@ -61,15 +61,21 @@ export function randomChoice<T>(arr: T[]): T {
 }
 
 /**
- * Select a random element from an array, giving preference to elements that
- * have not been used yet. The selected element will be added to the used
- * array to prevent it from being selected again in future calls.
+ * Select a random, unused element from an array, if any. The
+ * selected element will be remembered to prevent it from
+ * being selected again in future calls.
  */
-export function randomChoiceUsed<T>(arr: T[], used: T[]): T {
-  const availableChoices = arr.filter((item) => !used.includes(item)) || arr;
-  const selectedItem = randomChoice(availableChoices);
-  used.push(selectedItem);
-  return selectedItem;
+export function createRandomChoiceOnce() {
+  const used: Set<any> = new Set();
+
+  return function randomChoiceOnce<T>(arr: T[]): T | null {
+    const availableChoices = arr.filter((item) => !used.has(item) && item !== '');
+    if (availableChoices.length === 0) return null;
+  
+    const selectedItem = randomChoice(availableChoices);
+    used.add(selectedItem);
+    return selectedItem;
+  }
 }
 
 /**
