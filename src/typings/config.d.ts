@@ -29,6 +29,10 @@ declare module '@typings' {
     sidebar_filepath: boolean;
     metadata_in_slideshow: boolean;
 
+    // on this day settings
+    on_this_day_desc: boolean;
+    on_this_day_range: number;
+
     // folder settings
     folders_path: string;
     show_hidden_folders: boolean;

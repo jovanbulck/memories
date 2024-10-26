@@ -5,7 +5,12 @@
         <XImg class="fill-block" :src="year.url" />
 
         <div class="overlay top-left fill-block">
-          {{ year.text }}
+          <div class="overlay-desc">
+            {{ year.desc }}
+          </div>
+          <div class="overlay-year" :class="{ 'overlay-desc': !year.desc }">
+            {{ year.text }}
+          </div>
         </div>
       </div>
     </div>
@@ -37,10 +42,15 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
 
 import * as utils from '@services/utils';
 import * as dav from '@services/dav';
-import type { IPhoto } from '@typings';
+import type { IPhoto, IImageInfo } from '@typings';
 
 import LeftMoveIcon from 'vue-material-design-icons/ChevronLeft.vue';
 import RightMoveIcon from 'vue-material-design-icons/ChevronRight.vue';
+
+import axios from '@nextcloud/axios';
+import { API } from '@services/API';
+
+import staticConfig from '@services/static-config';
 
 interface IYear {
   year: number;
@@ -48,6 +58,7 @@ interface IYear {
   preview: IPhoto;
   photos: IPhoto[];
   text: string;
+  desc: string;
 }
 
 export default defineComponent({
@@ -144,6 +155,7 @@ export default defineComponent({
             this.years.push({
               year,
               text,
+              desc: '',
               url: '',
               preview: null!,
               photos: [],
@@ -162,6 +174,118 @@ export default defineComponent({
         year.photos = utils.randomSubarray(year.photos, 10);
       }
 
+      const desc_en = await staticConfig.get('on_this_day_desc');
+
+      // TODO move this to translations
+      const synonyms = [
+        'Dreamy',
+        'Serene',
+        'Blissful',
+        'Tranquil',
+        'Joyful',
+        'Radiant',
+        'Whimsical',
+        'Charming',
+        'Enchanting',
+        'Delightful',
+        'Nostalgic',
+        'Peaceful',
+        'Harmonious',
+        'Magical',
+        'Wonderful',
+        'Lovely',
+        'Cheerful',
+        'Vibrant',
+        'Hopeful',
+        'Graceful',
+        'Breathtaking',
+        'Captivating',
+        'Idyllic',
+        'Refreshing',
+        'Comforting',
+        'Uplifting',
+        'Heartwarming',
+        'Inviting',
+        'Splendid',
+        'Radiating',
+        'Picturesque',
+        'Joyous',
+        'Sublime',
+        'Exquisite',
+        'Blissful',
+        'Content',
+        'Sweet',
+        'Gentle',
+        'Soothing',
+        'Luminous',
+        'Sparkling',
+        'Playful',
+        'Nostalgic',
+        'Wholesome',
+        'Fanciful',
+        'Dreamlike',
+        'Euphoric',
+        'Celebratory',
+        'Refreshing',
+        'Invigorating',
+      ];
+      const moments = [
+        'Instances',
+        'Occasions',
+        'Events',
+        'Times',
+        'Episodes',
+        'Intervals',
+        'Snaps',
+        'Recollections',
+        'Remembrances',
+        'Nostalgia',
+        'Impressions',
+        'Thoughts',
+        'Pictures',
+        'Images',
+        'Shots',
+        'Visuals',
+        'Portraits',
+        'Moments',
+        'Memories',
+        'Snapshots',
+        'Reflections',
+        'Reminiscences',
+        'Experiences',
+        'Photographs',
+        'Keepsakes',
+        'Souvenirs',
+        'Chronicles',
+        'Vignettes',
+        'Flashbacks',
+        'Treasures',
+        'Archives',
+        'Records',
+        'Scenes',
+        'Highlights',
+        'Journeys',
+        'Milestones',
+        'Echoes',
+        'Tales',
+        'Legacies',
+        'Fragments',
+        'Visions',
+        'Captures',
+        'Essences',
+        'Tokens',
+        'Mementos',
+        'Artifacts',
+        'Diaries',
+        'Journals',
+        'Pictorials',
+        'Nostalgia',
+        'Sentiments',
+        'Emotions',
+        'Glimpses',
+      ];
+      const rand_once = utils.createRandomChoiceOnce();
+
       // Choose preview photo
       for (const year of this.years) {
         // Try to prioritize landscape photos on desktop
@@ -176,6 +300,20 @@ export default defineComponent({
           photo: year.preview,
           msize: 512,
         });
+
+        // Generate descriptive caption
+        if (desc_en) {
+          const url = API.Q(utils.getImageInfoUrl(year.preview), { tags: 1, clusters: 'recognize' });
+          const res = await axios.get<IImageInfo>(url);
+          let noun = null;
+          if (res.data.clusters?.recognize)
+            noun = rand_once(res.data.clusters.recognize.map((cluster) => cluster.name));
+          if (!noun && res.data.tags) noun = rand_once(Object.values(res.data.tags));
+          if (!noun && res.data.address) noun = rand_once(res.data.address.split(','));
+          if (!noun) noun = rand_once(moments) || utils.randomChoice(moments);
+          const syn = rand_once(synonyms) || utils.randomChoice(synonyms);
+          year.desc = `${syn} ${noun}`;
+        }
       }
 
       await this.$nextTick();
@@ -300,14 +438,23 @@ $mobHeight: 165px;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     display: flex;
-    align-items: end;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
     color: white;
-    font-size: 1.2em;
     padding: 5%;
     white-space: normal;
     cursor: inherit;
     transition: background-color 0.2s ease-in-out;
+    font-weight: 500;
+  }
+
+  .overlay-year {
+    font-size: 1em;
+  }
+
+  .overlay-desc {
+    font-size: 1.2em;
   }
 
   &:hover .overlay {
@@ -318,7 +465,14 @@ $mobHeight: 165px;
     aspect-ratio: 3/4;
     height: $mobHeight;
     .overlay {
-      font-size: 1.1em;
+      font-size: 1em;
+    }
+    .overlay-year {
+      font-size: 0.9em;
+    }
+
+    .overlay-desc {
+      font-size: 1em;
     }
   }
 }

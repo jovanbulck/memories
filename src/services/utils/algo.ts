@@ -61,6 +61,24 @@ export function randomChoice<T>(arr: T[]): T {
 }
 
 /**
+ * Select a random, unused element from an array, if any. The
+ * selected element will be remembered to prevent it from
+ * being selected again in future calls.
+ */
+export function createRandomChoiceOnce() {
+  const used: Set<any> = new Set();
+
+  return function randomChoiceOnce<T>(arr: T[]): T | null {
+    const availableChoices = arr.filter((item) => !used.has(item) && item !== '');
+    if (availableChoices.length === 0) return null;
+  
+    const selectedItem = randomChoice(availableChoices);
+    used.add(selectedItem);
+    return selectedItem;
+  }
+}
+
+/**
  * Choose a random sub array from an array
  * https://stackoverflow.com/a/11935263/4745239
  */

@@ -100,6 +100,25 @@
         </div>
       </NcAppSettingsSection>
 
+      <NcAppSettingsSection id="onthisday-settings" :name="names.onthisday">
+        <NcTextField
+          type="number"
+          label="On This Day Range"
+          :placeholder="String(config['on_this_day_range'])"
+          :label-visible="true"
+          :value="String(config['on_this_day_range'])"
+          @change="updateOnThisDayRange(Number($event.target.value))"
+        />
+
+        <NcCheckboxRadioSwitch
+          :checked.sync="config.on_this_day_desc"
+          @update:checked="updateOnThisDayDesc"
+          type="switch"
+        >
+          {{ 'Descriptive captions' }}
+        </NcCheckboxRadioSwitch>
+      </NcAppSettingsSection>
+
       <NcAppSettingsSection id="account-settings" :name="names.account" v-if="isNative">
         {{ t('memories', 'Logged in as {user}', { user }) }}
         <NcButton @click="logout" id="sign-out">
@@ -221,6 +240,7 @@ export default defineComponent({
       header: t('memories', 'Memories Settings'),
       general: t('memories', 'General'),
       viewer: t('memories', 'Photo Viewer'),
+      onthisday: 'On This Day',
       account: t('memories', 'Account'),
       folders: t('memories', 'Folders'),
       albums: t('memories', 'Albums'),
@@ -342,6 +362,16 @@ export default defineComponent({
 
     async updateMetadataInSlideshow() {
       await this.updateSetting('metadata_in_slideshow', 'metadataInSlideshow');
+    },
+
+    // On this day settings
+    async updateOnThisDayDesc() {
+      await this.updateSetting('on_this_day_desc');
+    },
+
+    async updateOnThisDayRange(value: number) {
+      this.config.on_this_day_range = value;
+      await this.updateSetting('on_this_day_range');
     },
 
     // Folders settings
