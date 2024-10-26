@@ -41,7 +41,7 @@ class Version800001Date20241026171056 extends SimpleMigrationStep
 
         if (!$table->hasColumn('uid')) {
             $table->addColumn('uid', 'string', [
-                'notnull' => true,
+                'notnull' => false,
                 'length' => 64,
             ]);
         }
@@ -72,15 +72,17 @@ class Version800001Date20241026171056 extends SimpleMigrationStep
                     'UPDATE *PREFIX*memories AS m
                     SET uid = f.metadata->>\'author\'
                     FROM *PREFIX*files_versions AS f
-                    WHERE f.fileid = m.fileid',
+                    WHERE f.fileid = m.fileid
+                    AND f.metadata->>\'author\' IS NOT NULL',
                 );
             } elseif (preg_match('/sqlite/i', $platform::class)) {
                 $this->dbc->executeQuery(
                     'UPDATE memories
-                    SET uid	 = (
-                        SELECT json_extract(metadata, "$.author"
-						FROM files_versions
-                        WHERE fileid = memories.fileid)',
+                    SET uid = (
+                        SELECT json_extract(metadata, "$.author")
+                        FROM files_versions
+                        WHERE fileid = memories.fileid
+                        AND json_extract(metadata, "$.author") IS NOT NULL',
                 );
             } else {
                 throw new \Exception('Unsupported '.$platform::class);
