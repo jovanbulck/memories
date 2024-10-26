@@ -181,7 +181,7 @@ export default defineComponent({
     },
 
     owner(): string | null {
-      return this.data.owner || null;
+      return this.data.uid || null;
     },
 
 

@@ -316,8 +316,8 @@ trait TimelineQueryDays
             unset($row['liveid']);
         }
 
-        if ($row['owner'] === Util::getUID()) {
-            unset($row['owner']);
+        if ($row['uid'] === Util::getUID()) {
+            unset($row['uid']);
         }
 
         // Favorite field, may not be present
