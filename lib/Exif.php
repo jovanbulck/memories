@@ -344,20 +344,31 @@ class Exif
             '-api', 'LargeFileSupport=1',
             '-json=-', $path,
         ]);
+
+        $pipes = [];
         $proc = proc_open($cmd, [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w'],
         ], $pipes);
+        stream_set_blocking($pipes[1], false);
 
         fwrite($pipes[0], $raw);
         fclose($pipes[0]);
 
-        $stdout = self::readOrTimeout($pipes[1], self::EXIFTOOL_TIMEOUT);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        proc_terminate($proc);
-        proc_close($proc);
+        try {
+            $stdout = self::readOrTimeout($pipes[1], self::EXIFTOOL_TIMEOUT);
+        } catch (\Exception $ex) {
+            error_log("Timeout reading from exiftool: [{$path}]");
+
+            throw $ex;
+        } finally {
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            proc_terminate($proc);
+            proc_close($proc);
+        }
+
         if (str_contains($stdout, 'error')) {
             error_log("Exiftool error: {$stdout}");
 
@@ -402,9 +413,9 @@ class Exif
         try {
             return self::readOrTimeout($pipes[1], self::EXIFTOOL_TIMEOUT);
         } catch (\Exception $ex) {
-            error_log("Exiftool timeout: [{$path}]");
+            error_log("Timeout reading from exiftool: [{$path}]");
 
-            throw new \Exception('Could not read from Exiftool');
+            throw $ex;
         } finally {
             fclose($pipes[1]);
             fclose($pipes[2]);
@@ -420,8 +431,6 @@ class Exif
 
     private static function getExiftool(): array
     {
-        putenv('LANG=C'); // set perl lang to suppress warning
-
         return BinExt::getExiftool();
     }
 
@@ -449,25 +458,37 @@ class Exif
      */
     private static function readOrTimeout($handle, int $timeout, ?string $delimiter = null): string
     {
-        $buf = '';
-        $waitedMs = 0;
+        $buffer = '';
 
-        while ($waitedMs < $timeout && ($delimiter ? !str_ends_with($buf, $delimiter) : !feof($handle))) {
-            $r = stream_get_contents($handle);
-            if (empty($r)) {
-                ++$waitedMs;
-                usleep(1000);
+        // Absolute time to wait until
+        $timeEnd = microtime(true) + $timeout / 1000;
 
+        // Select expects variables
+        $read = [$handle];
+        $write = $except = null;
+
+        while (microtime(true) < $timeEnd) {
+            // Check if we have delimiter or eof
+            if (feof($handle) || ($delimiter && str_ends_with($buffer, $delimiter))) {
+                return $buffer;
+            }
+
+            // Wait for data to read
+            $ready = stream_select($read, $write, $except, 1, 0);
+            if (false === $ready) {
+                throw new \Exception('Stream select error');
+            }
+
+            // No data is available yet
+            if (0 === $ready) {
                 continue;
             }
-            $buf .= $r;
+
+            // Append to buffer
+            $buffer .= stream_get_contents($handle);
         }
 
-        if ($waitedMs >= $timeout) {
-            throw new \Exception('Timeout');
-        }
-
-        return $buf;
+        throw new \Exception('Timeout');
     }
 
     private static function getExifFromLocalPathWithStaticProc(string $path): array
@@ -518,18 +539,18 @@ class Exif
 
         try {
             $stdout = self::readOrTimeout($pipes[1], self::EXIFTOOL_TIMEOUT);
-
-            return self::processStdout($stdout);
         } catch (\Exception $ex) {
-            error_log("Exiftool timeout: [{$path}]");
+            error_log("Timeout reading from exiftool: [{$path}]");
 
-            throw new \Exception('Could not read from Exiftool');
+            throw $ex;
         } finally {
             fclose($pipes[1]);
             fclose($pipes[2]);
             proc_terminate($proc);
             proc_close($proc);
         }
+
+        return self::processStdout($stdout);
     }
 
     /** Get json array from stdout of exiftool */
@@ -537,7 +558,11 @@ class Exif
     {
         $json = json_decode($stdout, true);
         if (!$json) {
-            throw new \Exception('Could not read exif data');
+            throw new \Exception('Failed to parse exiftool output as JSON');
+        }
+
+        if (!\is_array($json) || !\count($json)) {
+            throw new \Exception('Exiftool output is not an array with at least one element');
         }
 
         return $json[0];

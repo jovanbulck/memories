@@ -8,7 +8,7 @@ OC.L10N.register(
     "# Memories: Photo Management for Nextcloud\n\nMemories is a *batteries-included* photo management solution for Nextcloud with advanced features including:\n\n- **📸 Timeline**: Sort photos and videos by date taken, parsed from Exif data.\n- **⏪ Rewind**: Jump to any time in the past instantly and relive your memories.\n- **🤖 AI Tagging**: Group photos by people and objects, powered by [recognize](https://github.com/nextcloud/recognize) and [facerecognition](https://github.com/matiasdelellis/facerecognition).\n- **🖼️ Albums**: Create albums to group photos and videos together. Then share these albums with others.\n- **🫱🏻‍🫲🏻 External Sharing**: Share photos and videos with people outside of your Nextcloud instance.\n- **📱 Mobile Support**: Work from any device, of any shape and size through the web app.\n- **✏️ Edit Metadata**: Edit dates and other metadata on photos quickly and in bulk.\n- **📦 Archive**: Store photos you don't want to see in your timeline in a separate folder.\n- **📹 Video Transcoding**: Transcode videos and use HLS for maximal performance.\n- **🗺️ Map**: View your photos on a map, tagged with accurate reverse geocoding.\n- **📦 Migration**: Migrate easily from Nextcloud Photos and Google Takeout.\n- **⚡️ Performance**: Do all this very fast.\n\n## 🚀 Installation\n\n1. Install the app from the Nextcloud app store (try a demo [here](https://demo.memories.gallery/apps/memories/)).\n1. Perform the recommended [configuration steps](https://memories.gallery/config/).\n1. Run `php occ memories:index` to generate metadata indices for existing photos.\n1. Open the 📷 Memories app in Nextcloud and set the directory containing your photos." : "# تطبيق Memories: تطبيق إدارة الصور بنكست كلود\n\nتطبيق Memories هو حل إدارة الصور * مع مجموعة عناصر مدمجة * بنكست كلود مع ميزات متقدمة تشمل:\n\n- ** 📸 التسلسل الزمني **: ترتيب الصور ومقاطع الفيديو حسب تاريخ الالتقاط ، وتحليلها بواسطة بيانات Exif.\n- ** ⏪ الرجوع للخلف**: انتقل إلى أي وقت في الماضي على الفور واسترجع ذكرياتك.\n- ** 🤖 الوسم بالذكاء الأصطناعي **: جمع الصور جماعية الأشخاص والأشياء، مدعومة من قبل [recognize] (https://github.com/nextcloud/recognize) و [facerecognition] (https://github.com/matiasdelellis/facerecognition ).\n- ** 🖼️ الألبومات **: أنشئ ألبومات لتجميع الصور ومقاطع الفيديو معًا. ثم شارك هذه الألبومات مع الآخرين.\n- ** 🫱🏻‍🫲🏻 المشاركة الخارجية **: شارك الصور ومقاطع الفيديو مع أشخاص خارج مثيل نكست كلود الخاص بك.\n- ** 📱 دعم الهاتف **: العمل من أي جهاز، من أي شكل وحجم من خلال تطبيق الويب.\n- ** ✏️ تحرير البيانات الوصفية **: تحرير التواريخ والبيانات الوصفية الأخرى على الصور بسرعة وبشكل مجمّع.\n- ** 📦 الأرشفة **: قم بتخزين الصور التي لا تريد أن تراها في تسلسلك الزمني في مجلد منفصل.\n- ** 📹 تحويل ترميز الفيديو **: تحويل مقاطع الفيديو واستخدام بروتوكول HLS لتحقيق أقصى أداء.\n- ** 🗺️ الخريطة **: اعرض صورك على الخريطة، مع تمييزها بترميز جغرافي عكسي دقيق.\n- ** 📦 الانتقال**: الانتقال بسهولة من Nextcloud Photos و Google Takeout.\n- ** ⚡️ الأداء **: قم بفعل كل هذا بسرعة كبيرة.\n\n## 🚀 التثبيت\n\n1. قم بتثبيت التطبيق من متجر تطبيقات نكست كلود(جرب نسخة تجريبية[هنا] (https://demo.memories.gallery/apps/memories/)).\n1. نفذ [خطوات التكوين] الموصى بها (https://memories.gallery/config/).\n1. قم بتشغيل \"php occ memories:index\" لإنشاء فهارس بيانات وصفية للصور الموجودة.\n1. افتح 📷 تطبيق Memories في نكست كلاود وقم بتعيين الدليل الذي يحتوي على صورك.",
     "Settings" : "الإعدادات",
     "People (Recognize)" : "الأشخاص (التعرف)",
-    "People" : "الناس",
+    "People" : "أشخاص",
     "People (Face Recognition)" : "الأشخاص (التعرف على الوجه)",
     "Timeline" : "الجدول الزمني",
     "Explore" : "استكشاف",
@@ -23,7 +23,7 @@ OC.L10N.register(
     "View all" : "عرض الكل",
     "Recognize" : "التعرف على",
     "Face Recognition" : "التعرُّف علي الوجوه",
-    "Videos" : "فيديوهات",
+    "Videos" : "مقاطع الفيديو",
     "A better photos experience awaits you" : "تجربة صور أفضل في انتظارك",
     "Choose the root folder of your timeline to begin" : "اختر مجلد جذر لبدء تسلسلك الزمني",
     "Continue to Memories" : "تابع إلى Memories",
@@ -68,7 +68,7 @@ OC.L10N.register(
     "Autoplay Live Photos" : "التشغيل التلقائي للصور الحيّة",
     "Show full file path in sidebar" : "أظهِر المسار الكامل للملف في الشريط الجانبي",
     "Show metadata in slideshow" : "أعرُض البيانات الوصفية في عرض الشرائح",
-    "High resolution image loading behavior" : "سلوك تحميل الصور عالية الدِّقة",
+    "High resolution image loading behavior" : "سلوك تحميل الصور عالية الدقة",
     "Load high resolution image on zoom" : "تحميل الصور عالية الدِّقَة على \"الزوم\"",
     "Always load high resolution image (not recommended)" : "قُم دائماً بتحميل الصور عالية الدِّقّة (لا يُنصح به)",
     "Never load high resolution image" : "لا تقُم أبداً بتحميل الصِّوَر عالية الدِّقّة",
@@ -84,7 +84,7 @@ OC.L10N.register(
     "Show hidden albums" : "Show hidden albums",
     "Memories Settings" : "إعدادات \"الذكريات\" Memories",
     "General" : "العامة",
-    "Photo Viewer" : "عارض الصِّوَر",
+    "Photo Viewer" : "عارض الصور",
     "Account" : "الحساب",
     "Choose Timeline Paths" : "اختر مسارات التسلسل الزمني",
     "Choose the root for the folders view" : "إختَر الدليل الأساسي لعرض المجلدات",
@@ -100,7 +100,7 @@ OC.L10N.register(
     "Recognize is installed but not enabled for face recognition." : "تطبيق \"التعرُّف\" Recognize للتعرٌّف على الوجوه مُثبّت لكنه غير مُمكّن .",
     "Recognize is not installed. Face recognition and object tagging may be unavailable." : "تطبيق \"التعرُّف\" Recognize للتعرٌّف على الوجوه غير مُثبّت. و بالتالي، فإن التعرُّف على الوجوه و وَسْم الأشياء غير مُتاح. ",
     "Face Recognition is installed and enabled" : "تطبيق \"التعرُّف على الوجوه\" Face Recognition مُثبّت و مُمكّن",
-    "Preview generator is installed and enabled. Additional configuration may still be required." : "\"مُولِّد المعاينات Preview generator مُثبّت و مُمكّن. بعض الإعدادات الإضافية يمكن أن تكون لازمةً.",
+    "Preview generator is installed and enabled. Additional configuration may still be required." : "\"مولد المعاينات Preview generator مُثبّت و مُمكّن. بعض الإعدادات الإضافية يمكن أن تكون مطلوبة.",
     "Preview generator is not installed and configured. This may make Memories very slow." : "\"مُولِّد المعاينات Preview generator غير مُثبّت و لا مُهيّأ. هذا قد يتسبب في تبطئة \"تطبيق الذكريات\" Mempries بشكل كبير.",
     "Recommended Apps" : "تطبيقات مُوصىً بها",
     "Path to packaged exiftool binary" : "مسار الحزمة الثنائية exiftool",
@@ -114,7 +114,7 @@ OC.L10N.register(
     "PHP-Imagick is available [{version}]." : "PHP-Imagick متوفرة [{version}].",
     "PHP-Imagick is not available." : "PHP-Imagick غير متوفرة.",
     "Image editing will not work correctly." : "تحرير الصور لن يعمل بشكل صحيح.",
-    "Thumbnail generation may not work for some formats (HEIC, TIFF)." : "توليد مُصغَّرات الصِّوَر thumbnails قد لا يعمل مع بعض التنسيقات مثل (HEIC, TIFF).",
+    "Thumbnail generation may not work for some formats (HEIC, TIFF)." : "توليد معاينة الصور قد لا يعمل مع بعض التنسيقات مثل (HEIC, TIFF).",
     "Thumbnails for videos will be generated with this binary." : "سيتم إنشاء مُصَغَّرَات الصِّوَر لمقاطع الفيديو باستخدام هذا البُريْمِج.",
     "Thumbnail generation may not work for videos." : "توليد مُصغَّرات الصِّوَر thumbnails قد لا يعمل لبعض مقاطع الفيديو.",
     "Imaginary is enabled for preview generation. This will override other preview providers. We currently recommend against using Imaginary due to multiple bugs in handling of HEIC and GIF files." : "تم تمكين التخيُّلي Imaginary لإنشاء معاينة. سيؤدي هذا إلى تجاوز مزودي المعاينة الآخرين. نوصي حاليًا بعدم استخدام التخيُّلي Imaginary نظرًا لوجود أخطاء متعددة في التعامل مع ملفات HEIC وGIF.",
@@ -126,7 +126,7 @@ OC.L10N.register(
     "Images (JPEG, PNG, GIF, BMP)" : "الصور (تسيق JPEG, PNG, GIF, BMP)",
     "HEIC (Imagick)" : "تنسيق الصور HEIC (Imagick) ",
     "TIFF (Imagick)" : "تنسيق ملف الصور TIFF ( Imagick) ",
-    "Videos (ffmpeg)" : "فيديوهات (ffmpeg)",
+    "Videos (ffmpeg)" : "مقاطع الفيديو (ffmpeg)",
     "Imaginary (not recommended)" : "تخيُّلي imaginary (لا يُوصى به)",
     "Thank you for choosing Nextcloud and Memories to store your precious data!" : "شكراً لاختياركم منصة نكست كلاود و تطبيق الذكريات Memories لحفظ بياناتكم الثمينة. ",
     "Memories is very feature rich and setting it up properly can take some time." : "تطبيق الذكريات Memories يحوي الكثير من الخصائص و قد يستغرق إعداده بالشكل الصحيح بعض الوقت.",
@@ -138,7 +138,7 @@ OC.L10N.register(
     "Help & Support" : "عون  و دعم",
     "{n} media files have been indexed" : "تمّت فهرسة {n} ملفات وسائط",
     "{n} media files failed indexing and were skipped." : "{n} ملف وسائط أخفقت عملية فهرستها و تمّ تخطِّيها.",
-    "View failure logs." : "عرض سجل الإخفاقات.",
+    "View failure logs." : "عرض سجل الفشل.",
     "Files that failed indexing will not be indexed again unless they change." : "الملفات التي أخفقت فهرستها سوف لن تتم فهرستها مجدداً إلاّ إذا تغيرت.",
     "You can manually retry files that failed indexing." : "يمكنك يدوياً إعادة محاولة فهرسة الملفات التي أخفقت فهرستها سابقاً",
     "Automatic Indexing status: {status}" : "حالة الفهرسة التلقائية: {status}",
@@ -191,7 +191,7 @@ OC.L10N.register(
     "You are about to download the planet database. This may take a while." : "أنت على وشك تنزيل قاعدة بيانات الكوكب. هذا قد يستغرق بعض الوقت.",
     "This may also cause all photos to be re-indexed!" : "قد يتسبب هذا أيضًا في إعادة فهرسة جميع الصور!",
     "Continue" : "متابعة",
-    "Live transcoding provides for adaptive streaming of videos using HLS." : "يوفر تحويل الترميز المباشر دفقًا متكيفًا لمقاطع الفيديو باستخدام بروتوكول HLS.",
+    "Live transcoding provides for adaptive streaming of videos using HLS." : "يوفر تحويل الترميز المباشر بث متكيف لمقاطع الفيديو باستخدام بروتوكول HLS.",
     "Note that this may be very CPU intensive without hardware acceleration, and transcoding will not be used for external storage." : "لاحظ أن هذا قد يكون بالغ الحدة علي وحدة المعالجة المركزية دون تسريع الأجهزة، ولن يتم استخدام تحويل الترميز للتخزين الخارجي.",
     "Enable Transcoding" : "تمكين تحويل الترميز",
     "ffmpeg path" : "مسار ffmpeg",
@@ -235,8 +235,8 @@ OC.L10N.register(
     "Connection address (same as bind if local)" : "عنوان الاتصال (نفس عنوان الاقتران إذا كان محليّاً)",
     "Quality Factor (15 - 45) (default 25)" : "عامل الكفاءة (15 - 45) (التلقائي 25)",
     "Transcoder" : "مُحوِّل Transcoder",
-    "Default high resolution image loading behavior of the photo viewer." : "السُّلوك التلقائي لتحميل الصِّوَر عالية الدِّقّة في \"عارِض الصِّوَر\"",
-    "The configuration here also applies to public link shares." : "هذا الإعداد يسري كذلك على المُشارَكات عبر الرابط العمومي",
+    "Default high resolution image loading behavior of the photo viewer." : "السلوك التلقائي لتحميل الصور عالية الدقة في \"عارض الصور\"",
+    "The configuration here also applies to public link shares." : "هذا الإعداد ينطبق كذلك على المشاركات عبر الروابط العامة",
     "Users may override this setting." : "يُمكن للمستخدِمين تجاوز هذا الإعداد.",
     "Always load high resolution image (not recommended if using HEIC/TIFF)" : "قُم دائماً بتحميل الصور عالية الدِّقّة (لا يُنصح به في حالة استعمال HEIC/TIFF)",
     "Template" : "قالب",
@@ -249,7 +249,7 @@ OC.L10N.register(
     "Add people or groups who can edit your album" : "إضِف الأشخاص أو المجموعات التي يحق لها تعديل ألبومك",
     "Search for collaborators" : "البحث عن متعاونين",
     "Search people or groups" : "البحث عن أشخاص أو مجموعات",
-    "Add {collaboratorLabel} to the collaborators list" : "أضِف {collaboratorLabel} إلى قائمة المتعاونين",
+    "Add {collaboratorLabel} to the collaborators list" : "إضافة {collaboratorLabel} إلى قائمة المتعاونين",
     "No collaborators available" : "لا يوجد أي متعاونين",
     "Remove {collaboratorLabel} from the collaborators list" : "حذف {collaboratorLabel} من قائمة المتعاونين",
     "Copy the public link" : "إنسخ الرابط العمومي",
@@ -279,8 +279,8 @@ OC.L10N.register(
     "Go to the add collaborators view." : "إذهب إلى عرض إضافة المتعاونين",
     "Add collaborators" : "أضف المتعاونين",
     "Back to the new album form." : "عُد إلى نموذج الألبوم الجديد.",
-    "Save" : "Save",
-    "Create album" : "أنشِيء ألبوماً",
+    "Save" : "حفظ",
+    "Create album" : "إنشاء ألبوم",
     "Invalid album name; should not contain any slashes." : "اسم الألبوم غير صالح. يجب ألا يحتوي على أي خطوط مائلة.",
     "Create new album." : "إنشاء ألبوم جديد",
     "Save changes" : "حفظ التعديلات",
@@ -306,7 +306,7 @@ OC.L10N.register(
     "Copyright" : "حقوق التأليف",
     "Empty" : "فارغ",
     "Unchanged" : "دون تغيير",
-    "Reset" : "إعادة الضبط",
+    "Reset" : "إعادة تعيين",
     "Remove location" : "إزالة الموقع",
     "Search location / landmark" : "البحث عن مواقع / معالم",
     "Failed to search for location with Nominatim." : "فشل البحث عن الموقع باستخدام تطبيق الخرائط Nominatim.",
@@ -342,7 +342,7 @@ OC.L10N.register(
     "Merge faces" : "دمج الوجوه",
     "Merge {name} with {newName}?" : "دمج {name} مع {newName}؟",
     "unnamed person" : "شخصٌ لم بُعطَ اسمه",
-    "Too many failures, aborting" : "إخفاقات كثيرة، سيتم الخروج",
+    "Too many failures, aborting" : "حالات فشل كثيرة، سيتم الإلغاء",
     "Error while moving {basename}" : "خطأٌ أثناء نقل {basename}",
     "Failed to move {name}." : "فشل في نقل {name}.",
     "Move selected photos to person" : "نقُل الصور المحددة إلى فئة شخص",
@@ -360,9 +360,9 @@ OC.L10N.register(
     "You may create or update permissions on public links using the sidebar." : "يمكنك إنشاء و تحديث أذونات الروابط العامة باستخدام الشريط الجانبي.",
     "Click a link to copy to clipboard." : "أنقُر علي الرابط لنسخه إلى الحافظة.",
     "Share link" : "مشاركة الرابط",
-    "Create Link" : "أنشِيءْ رابطاً",
+    "Create Link" : "إنشاء رابط",
     "Refresh" : "إنعاش",
-    "Password protected" : "محمي بكلمة السر",
+    "Password protected" : "محمي بكلمة المرور",
     "Expires" : "تنتهي صلاحيته فى",
     "Editable" : "قابل للتعديل",
     "Read only" : "القراءة فقط",
@@ -370,7 +370,7 @@ OC.L10N.register(
     "Failed to copy link to clipboard" : "تعذّر نسخ الرابط إلى الحافظة",
     "Reduced Size" : "حجم مصغر",
     "Share in lower quality (small file size)" : "Share in lower quality (small file size)",
-    "High Resolution" : "تباينٌ عالٍ",
+    "High Resolution" : "دقة عالية",
     "Share in high quality (large file size)" : "Share in high quality (large file size)",
     "Original File" : "الملف الأصلي",
     "Public Link" : "رابط عام",
@@ -384,9 +384,9 @@ OC.L10N.register(
     "Destination path" : "مسار الوجهة",
     "Add to albums" : "إضافة إلى الألبومات",
     "Add tags" : "إضافة سِمَاتٍ",
-    "Attach collaborative tags to all uploads" : "قم بإرفاق سمات تعاونية لجميع المرفوعات",
+    "Attach collaborative tags to all uploads" : "قم بإرفاق سمات تعاونية لجميع الملفات المرفوعة",
     "No albums selected" : "لم يتم تحديد أيّ  ألبومات",
-    "Choose the destination folder for the upload" : "حدِّد المجلد الوجهة للرفع",
+    "Choose the destination folder for the upload" : "تحديد المجلد الوجهة للرفع",
     "Creating tags" : "إنشاء سِمَاتٍ",
     "Uploading {file}" : "رفع الملف {file} ",
     "Failed to upload {file}" : "تعذّر رفع الملف {file}",
@@ -398,7 +398,7 @@ OC.L10N.register(
     "Sorting order" : "ترتيب الفرز",
     "Last updated" : "آخر تحديث",
     "Creation date" : "تاريخ الإنشاء",
-    "Album name" : "إسم الأُلبوم",
+    "Album name" : "اسم الألبوم",
     "Oldest first" : "الأقدم أولاً",
     "Ascending" : "تَصاعُدي",
     "Newest first" : "الأحدث أولاً",
@@ -423,7 +423,7 @@ OC.L10N.register(
     "Image saved successfully" : "تم حفظ الصورة بنجاح",
     "Error saving image: {error}" : "خطأ في حفظ الصورة: {error}",
     "Unsaved changes" : "تغييرات لم يتم حفظها",
-    "Drop changes" : "إسقاط التغييرات",
+    "Drop changes" : "تجاهل التغييرات",
     "Play Live Photo" : "تشغيل صور Live Photo",
     "Download Video" : "تنزيل الفيديو",
     "Download {ext}" : "تنزيل {ext}",
@@ -431,7 +431,7 @@ OC.L10N.register(
     "Previous" : "السابق",
     "Next" : "التالي",
     "Editing is currently disabled for Live Photos" : "التحرير معطل حاليّاً بالنسبة لصور Live Photos",
-    "You are now logged in to the server!" : "أنت الآن داخل على الخادوم!",
+    "You are now logged in to the server!" : "أنت الآن مسجل دخولك على الخادم!",
     "You can set up automatic uploads from this device using the Nextcloud mobile app. Click the button below to download the app, or skip this step and continue." : "بإمكانك الإعداد للرفع التلقائي من هذا الجهاز باستعمال تطبيق نكست كلاود على الهاتف النقال. إضغَط الزِّرّ في الأسفل لتنزيل التطبيق، أو تخطَّ هذه الخطوة و استمر.",
     "Set up automatic upload" : "الإعداد للرفع التلقائي",
     "Memories can show local media on your device alongside the media on your server. This requires access to the media on this device." : "بإمكان تطبيق \"الذكريات\" Memories أن يعرض الوسائط المحلية إلى جانب الوسائط على خادومك. هذا يتطلب الوصول إلى الوسائط على هذا الجهاز.",
@@ -459,8 +459,8 @@ OC.L10N.register(
     "Zoom in" : "تكبير",
     "Zoom out" : "تصغير",
     "Toggle zoom menu" : "تبديل قائمة التكبير و التصغير",
-    "Adjust" : "إضبِط",
-    "Fine-tune" : "مُناغمة file-tune",
+    "Adjust" : "ضبط",
+    "Fine-tune" : "ضبط دقيق",
     "Filters" : "فلاتر",
     "Watermark" : "علامة مائية",
     "Draw" : "إرسم",
@@ -470,7 +470,7 @@ OC.L10N.register(
     "are not images" : "ليست صوراً",
     "is not an image" : "ليست صورةً",
     "to be uploaded" : "ليتم تحميلها",
-    "Crop" : "قَصْقِصْ",
+    "Crop" : "قص",
     "Original" : "أصلي",
     "Custom" : "مخصّص",
     "Square" : "مُربّع",
@@ -480,9 +480,9 @@ OC.L10N.register(
     "Classic TV" : "تلفاز كلاسيكي",
     "CinemaScope" : "إنفساح شاشة السينما CinemaScope",
     "Arrow" : "سهم",
-    "Blur" : "تضبيب Blur",
-    "Brightness" : "سطوع Brightness",
-    "Contrast" : "تباين Contrast",
+    "Blur" : "تضبيب",
+    "Brightness" : "سطوع",
+    "Contrast" : "تباين",
     "Un-flip X" : "لا انعكاس سيني Un-flip X",
     "Flip X" : "إنعكاس سيني Flip X",
     "Un-flip Y" : "إنعكاس صادي Flip Y",
@@ -502,7 +502,7 @@ OC.L10N.register(
     "Corner Radius" : "نصف قطر الزاوية Corner Radius",
     "Width in pixels" : "العرض بالبكسل",
     "Height in pixels" : "الارتفاع بالبكسل",
-    "Toggle ratio lock" : "تبديل قُفْل النِّسبَة ratio lock",
+    "Toggle ratio lock" : "تبديل قفل النسبة",
     "Reset to original image size" : "إرجاع الصورة لحجمها الأصلي",
     "Rotate" : "تدوير",
     "Text" : "نص",
@@ -512,7 +512,7 @@ OC.L10N.register(
     "Size" : "الحجم",
     "Letter spacing" : "تباعد الحروف",
     "Line height" : "إرتفاع السطر",
-    "Warmth" : "الشِّدَّة warmth",
+    "Warmth" : "الدفء",
     "+ Add watermark" : "+ أضِف العلامة المائية",
     "Choose watermark type" : "إختر نوع العلامة المائية",
     "Upload watermark" : "رفع علامة مائية",
@@ -544,7 +544,7 @@ OC.L10N.register(
     "No items" : "لا يوجد أي عنصر",
     "_{n} item_::_{n} items_" : ["{n} عنصر","{n} عنصر","{n} عنصر","{n} عنصر","{n} عنصر","{n} عنصر"],
     "Shared by {user}" : "تمتّ مشاركتها من قِبَل {user}",
-    "General Failure" : "إخفاقٌ عامٌّ",
+    "General Failure" : "فشل عام",
     "Error: {msg}" : "خطأ: {msg}",
     "Failed to delete {fileName}." : "تعذّر حذف {fileName}.",
     "Failed to move files." : "فشل نقل الملفات.",
@@ -564,7 +564,7 @@ OC.L10N.register(
     "Recognize is still working on your photos" : "لا يزال تطبيق التعرف Recognize يعمل على صورك",
     "You will find your friends soon. Please be patient" : "سوف تجد أصدقاءك قريباً. يرجي الانتظار",
     "Face Recognition is disabled. Enable in settings to find your friends" : "تم تعطيل التعرُّف على الوجوه. قم بتمكينه من الإعدادات حتي تستطيع العثور على أصدقائك",
-    "Your videos will appear here" : "فيديوهاتك ستظهر هنا",
+    "Your videos will appear here" : "مقاطع الفيديو الخاصة بك ستظهر هنا",
     "Add photos to albums by selecting them on your timeline." : "أضف الصور إلى الألبومات و ذلك عن طريق تحديدها على خطك الزمني.",
     "Create an album to get started" : "إنشاء ألبوم للبدء",
     "Archive photos you don't want to see in your timeline" : "أرشفة الصور التي لا ترغب في رؤيتها على تسلسلك الزمني",
