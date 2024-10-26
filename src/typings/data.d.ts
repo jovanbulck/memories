@@ -100,7 +100,7 @@ declare module '@typings' {
     /** Stacked RAW photos */
     stackraw?: IPhoto[];
 
-    owner?: string;
+    uid?: string;
   };
 
   export interface IImageInfo {

@@ -35,8 +35,8 @@
       </div>
 
       <div class="flag bottom-left">
-        <AccountMultipleIcon :size="22" v-if="data.owner" />
-        <span class="username" v-if="data.owner" >{{ owner }}</span>
+        <AccountMultipleIcon :size="22" v-if="data.uid" />
+        <span class="username" v-if="data.uid">{{ owner }}</span>
       </div>
 
       <div
@@ -86,7 +86,7 @@ import StarIcon from 'vue-material-design-icons/Star.vue';
 import VideoIcon from 'vue-material-design-icons/PlayCircleOutline.vue';
 import LocalIcon from 'vue-material-design-icons/CloudOff.vue';
 import RawIcon from 'vue-material-design-icons/Raw.vue';
-import AccountMultipleIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import AccountMultipleIcon from 'vue-material-design-icons/AccountMultiple.vue';
 
 import type { IDay, IPhoto } from '@typings';
 import type XImg from '@components/XImg.vue';
@@ -102,7 +102,7 @@ export default defineComponent({
     StarIcon,
     LocalIcon,
     RawIcon,
-    AccountMultipleIcon
+    AccountMultipleIcon,
   },
 
   props: {
@@ -181,9 +181,8 @@ export default defineComponent({
     },
 
     owner(): string | null {
-      return this.data.owner || null;
+      return this.data.uid || null;
     },
-
 
     videoUrl(): string | null {
       if (this.data.liveid) {
