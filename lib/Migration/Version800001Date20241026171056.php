@@ -13,6 +13,7 @@ use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use PDO;
 
 /**
  * FIXME Auto-generated migration step: Please modify to your needs!
@@ -39,9 +40,10 @@ class Version800001Date20241026171056 extends SimpleMigrationStep
 
         $table = $schema->getTable('memories');
 
+        $table->dropColumn('uid');
         if (!$table->hasColumn('uid')) {
             $table->addColumn('uid', 'string', [
-                'notnull' => false,
+                'notnull' => true,
                 'length' => 64,
             ]);
         }
@@ -54,36 +56,45 @@ class Version800001Date20241026171056 extends SimpleMigrationStep
      */
     public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void
     {
+        // create database triggers; this will never throw
+        \OCA\Memories\Db\AddMissingIndices::createFilecacheTriggers($output);
+
+        // migrate uid values from filecache
         try {
-            $output->info('Migrating values for uid from fileid');
+            $output->info('Migrating values for uid from filecache');
 
             $platform = $this->dbc->getDatabasePlatform();
 
             // copy existing parent values from filecache
             if (preg_match('/mysql|mariadb/i', $platform::class)) {
-                $this->dbc->executeQuery(
-                    'UPDATE *PREFIX*memories m
-					JOIN *PREFIX*files_versions f ON m.fileid = f.file_id
-					SET m.uid =JSON_UNQUOTE(JSON_EXTRACT(f.metadata, "$.author"))
-					WHERE JSON_UNQUOTE(JSON_EXTRACT(f.metadata, "$.author")) IS NOT NULL',
-                );
+		$this->dbc->executeQuery(
+        		'UPDATE *PREFIX*memories AS m
+        		JOIN *PREFIX*filecache AS f ON f.fileid = m.fileid
+        		JOIN *PREFIX*storages AS s ON f.storage = s.numeric_id
+			SET m.uid = SUBSTRING_INDEX(s.id, \'::\', -1)
+        		WHERE s.id LIKE \'home::%\'
+        		'
+    		);
             } elseif (preg_match('/postgres/i', $platform::class)) {
-                $this->dbc->executeQuery(
-                    'UPDATE *PREFIX*memories AS m
-                    SET uid = f.metadata->>\'author\'
-                    FROM *PREFIX*files_versions AS f
-                    WHERE f.fileid = m.fileid
-                    AND f.metadata->>\'author\' IS NOT NULL',
-                );
+    		$this->dbc->executeQuery(
+    		    'UPDATE *PREFIX*memories AS m
+		    SET uid = split_part(s.id, \'::\', 2)
+    		    FROM *PREFIX*filecache AS f
+    		    JOIN *PREFIX*storages AS s ON f.storage = s.numeric_id
+		    WHERE f.fileid = m.fileid
+		    AND s.id LIKE \'home::%\'
+		    '
+    		);
             } elseif (preg_match('/sqlite/i', $platform::class)) {
-                $this->dbc->executeQuery(
-                    'UPDATE memories
-                    SET uid = (
-                        SELECT json_extract(metadata, "$.author")
-                        FROM files_versions
-                        WHERE fileid = memories.fileid
-                        AND json_extract(metadata, "$.author") IS NOT NULL',
-                );
+	    	$this->dbc->executeQuery(
+        		'UPDATE memories AS m
+			SET uid = SUBSTR(s.id, INSTR(s.id, \'::\') + 2)
+        		FROM filecache AS f
+        		JOIN storages AS s ON f.storage = s.numeric_id
+        		WHERE f.fileid = m.fileid
+        		AND s.id LIKE \'home::%\'
+        		'
+    		);
             } else {
                 throw new \Exception('Unsupported '.$platform::class);
             }
