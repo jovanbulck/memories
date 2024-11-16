@@ -26,13 +26,9 @@ services:
       - PHP_MEMORY_LIMIT=1G
       - PHP_UPLOAD_LIMIT=1G
       - DEBIAN_FRONTEND=noninteractive
-    ports:
-      - 80:80
-      - 8080:8080
 
   db:
     image: mariadb:11
-    restart: always
     pull_policy: always
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --log_bin_trust_function_creators=1
     volumes:
@@ -47,10 +43,8 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     network_mode: service:nextcloud
 
   redis:
     image: redis:alpine
     pull_policy: always
-    restart: always
