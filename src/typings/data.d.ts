@@ -127,6 +127,8 @@ declare module '@typings' {
       recognize?: IFace[];
       facerecognition?: IFace[];
     };
+
+    uid?: string;
   }
 
   export interface IExif {

@@ -133,6 +133,7 @@ export default defineComponent({
       requested: false,
     },
     faceSrc: null as string | null,
+    userDisplay: null as string | null,
   }),
 
   watch: {
@@ -180,8 +181,8 @@ export default defineComponent({
       return null;
     },
 
-    owner(): string | null {
-      return this.data.uid || null;
+    owner(): string {
+      return this.userDisplay ?? this.data.uid ?? '';
     },
 
     videoUrl(): string | null {
@@ -271,9 +272,14 @@ export default defineComponent({
       );
     },
 
+    async addUserDisplay() {
+      this.userDisplay = await utils.getUserDisplayName(this.data.uid ?? null);
+    },
+
     /** Post load tasks */
     load() {
       this.addFaceRect();
+      this.addUserDisplay();
     },
 
     /** Error in loading image */
@@ -447,6 +453,7 @@ $icon-size: $icon-half-size * 2;
 
   > .username {
     font-size: 0.75em;
+    font-weight: bold;
     margin-left: 3px;
   }
 
