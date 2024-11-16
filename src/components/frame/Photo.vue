@@ -24,7 +24,13 @@
           <span class="time" v-if="data.video_duration">{{ videoDuration }}</span>
           <VideoIcon :size="22" />
         </div>
-        <div class="livephoto" v-if="data.liveid" @mouseenter.passive="playVideo" @mouseleave.passive="stopVideo" @touchstart.passive="touchVideo">
+        <div
+          class="livephoto"
+          v-if="data.liveid"
+          @mouseenter.passive="playVideo"
+          @mouseleave.passive="stopVideo"
+          @touchstart.passive="touchVideo"
+        >
           <LivePhotoIcon :size="22" :spin="liveState.waiting" :playing="liveState.playing" />
         </div>
       </div>
@@ -331,10 +337,8 @@ export default defineComponent({
 
     /** Start/stop preview video for touchscreens */
     touchVideo() {
-      if (this.liveState.playing)
-        this.stopVideo();
-      else
-        this.playVideo();
+      if (this.liveState.playing) this.stopVideo();
+      else this.playVideo();
     },
   },
 });
