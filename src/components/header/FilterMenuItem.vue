@@ -19,10 +19,10 @@
 				  </NcActionButton>
 
           <NcActionCheckbox
-              v-for="uid in uids"
+              v-for="(uid, idx) in uids"
               :key="uid"
-              :checked="true"
-              @update:checked="(value) => updateUid(uid, value)"
+              :checked="checkedUids[idx]"
+              @update:checked="(value) => updateUid(uid, idx, value)"
               class="filter-choice"
           >
             {{ displayNames.get(uid)?? uid }}
@@ -39,10 +39,10 @@
 				</NcActionButton>
 
         <NcActionCheckbox
-            v-for="media in media"
+            v-for="(media, idx) in media"
             :key="media"
-            :checked="true"
-            @update:checked="(value) => updateMedia(media, value)"
+            :checked="checkedMedia[idx]"
+            @update:checked="(value) => updateMedia(media, idx, value)"
             class="filter-choice"
         >
           {{ displayMediaType(media) }}
@@ -58,7 +58,7 @@
 				</NcActionButton>
 
         <NcActionCheckbox
-            :v-model="favoriteChecked"
+            :checked="favoriteChecked"
             @update:checked="(value) => updateFavorites(value)"
             class="filter-choice"
         >
@@ -104,30 +104,33 @@ export default defineComponent({
   data: () => ({
     /** Set of unique usernames in current timeline view */
     uids: [] as string[],
+    checkedUids: [] as boolean[],
     /** Display names corresponding to the uid set */
     displayNames: new Map(),
     /** Array of known media filter types */
-    media: [] as FilterMediaType[],
+    media: Object.keys(FilterMediaTypes) as FilterMediaType[],
+    checkedMedia: [] as boolean[],
     /** Whether or not to restrict the current timeline view to favorites only */
     favoriteChecked: false,
   }),
 
   created() {
-    this.init();
+    this.reset();
     utils.bus.on('memories:timeline:uid', this.refresh);
-    utils.bus.on('memories:timeline:create', this.init);
+    utils.bus.on('memories:timeline:create', this.reset);
   },
 
   beforeDestroy() {
     utils.bus.off('memories:timeline:uid', this.refresh);
-    utils.bus.off('memories:timeline:create', this.init);
+    utils.bus.off('memories:timeline:create', this.reset);
   },
 
   methods: {
-    init() {
+    reset() {
       this.uids = [utils.uid] as string[];
+      this.checkedUids = [true];
       this.displayNames = new Map([[utils.uid, this.t('memories', 'Me')]]);
-      this.media = Object.keys(FilterMediaTypes) as FilterMediaType[];
+      this.checkedMedia = this.media.map(() => true);
       this.favoriteChecked = false;
     },
 
@@ -142,17 +145,21 @@ export default defineComponent({
       const name = await utils.getUserDisplayName(uid);
       this.displayNames.set(uid, name);
       this.uids.push(uid);
+      this.checkedUids.push(true);
     },
 
-    updateUid(uid: string, selected: boolean) {
+    updateUid(uid: string, idx: number, selected: boolean) {
+      this.$set(this.checkedUids, idx, selected);
       utils.bus.emit('memories:filter:uid', {uid: uid, filter: !selected});
     },
 
-    updateMedia(media: FilterMediaType, selected: boolean) {
+    updateMedia(media: FilterMediaType, idx: number, selected: boolean) {
+      this.$set(this.checkedMedia, idx, selected);
       utils.bus.emit('memories:filter:media', {media: media, filter: !selected});
     },
 
     updateFavorites(selected: boolean) {
+      this.favoriteChecked = selected;
       utils.bus.emit('memories:filter:favorites', selected);
     },
   },

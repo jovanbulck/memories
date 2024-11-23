@@ -312,6 +312,7 @@ export default defineComponent({
     async routeChange(to: Route, from?: Route) {
       // Always do a hard refresh if the path changes
       if (from?.path !== to.path) {
+        utils.bus.emit('memories:timeline:create', null);
         await this.refresh();
 
         // Focus on the recycler (e.g. after navigation click)
@@ -409,7 +410,6 @@ export default defineComponent({
 
     /** Recreate everything */
     async refresh() {
-      utils.bus.emit('memories:timeline:create', null);
       await this.resetState();
       await this.createState();
     },
