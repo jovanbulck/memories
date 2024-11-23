@@ -75,7 +75,7 @@ trait TimelineQueryFilters
             $query->andWhere(
                 $query->expr()->orX(
                     $query->expr()->eq('m.isvideo', $query->expr()->literal(1)),
-                    $query->expr()->neq('m.liveId', $query->expr()->literal('')),
+                    $query->expr()->neq('m.liveid', $query->expr()->literal('')),
                     'm.w >= '.PANOROMA_ASPECT_RATIO.' * m.h',
                 ),
             );
