@@ -129,7 +129,7 @@ import * as dav from '@services/dav';
 import * as utils from '@services/utils';
 import * as nativex from '@native';
 
-import { API, DaysFilterType } from '@services/API';
+import { API, DaysFilterType, type FilterMediaType } from '@services/API';
 
 import type { IDay, IHeadRow, IPhoto, IRow } from '@typings';
 
@@ -203,6 +203,15 @@ export default defineComponent({
     /** Timer to load day call */
     fetchDayTimer: null as number | null,
 
+    /** Set of unique user ids in the current timeline view */
+    uids: new Set<string>(),
+    /** Set of unique user ids to be excluded from the current timeline view */
+    filteredUids: new Set<string>(),
+    /** Set of media types to be excluded from the current timeline view */
+    filteredMedia: new Set<FilterMediaType>(),
+    /** Whether or not to restrict the current timeline to favorites only */
+    filteredFavorites: false,
+
     /** State for request cancellations */
     state: Math.random(),
   }),
@@ -236,6 +245,9 @@ export default defineComponent({
     utils.bus.on('memories:timeline:deleted', this.deleteFromViewWithAnimation);
     utils.bus.on('memories:timeline:soft-refresh', this.softRefresh);
     utils.bus.on('memories:timeline:hard-refresh', this.refresh);
+    utils.bus.on('memories:filter:uid', this.filterUid);
+    utils.bus.on('memories:filter:media', this.filterMedia);
+    utils.bus.on('memories:filter:favorites', this.filterFavorites);
   },
 
   beforeDestroy() {
@@ -246,6 +258,9 @@ export default defineComponent({
     utils.bus.off('memories:timeline:deleted', this.deleteFromViewWithAnimation);
     utils.bus.off('memories:timeline:soft-refresh', this.softRefresh);
     utils.bus.off('memories:timeline:hard-refresh', this.refresh);
+    utils.bus.off('memories:filter:uid', this.filterUid);
+    utils.bus.off('memories:filter:media', this.filterMedia);
+    utils.bus.off('memories:filter:favorites', this.filterFavorites);
     this.resetState();
     this.state = 0;
   },
@@ -383,6 +398,10 @@ export default defineComponent({
       this.state = Math.random();
       this.loadedDays.clear();
       this.sizedDays.clear();
+      this.uids.clear();
+      this.filteredUids.clear();
+      this.filteredMedia.clear();
+      this.filteredFavorites = false;
       this.fetchDayQueue = [];
       window.clearTimeout(this.fetchDayTimer ?? 0);
       window.clearTimeout(this.resizeTimer ?? 0);
@@ -390,8 +409,30 @@ export default defineComponent({
 
     /** Recreate everything */
     async refresh() {
+      utils.bus.emit('memories:timeline:create', null);
       await this.resetState();
       await this.createState();
+    },
+
+    filterUid(data: { uid: string, filter: boolean} ) {
+      if (data.filter)
+        this.filteredUids.add(data.uid);
+      else
+        this.filteredUids.delete(data.uid);
+      this.softRefresh();
+    },
+
+    filterMedia(data: { media: FilterMediaType, filter: boolean} ) {
+      if (data.filter)
+        this.filteredMedia.add(data.media);
+      else
+        this.filteredMedia.delete(data.media);
+      this.softRefresh();
+    },
+
+    filterFavorites(filter: boolean) {
+      this.filteredFavorites = filter;
+      this.softRefresh();
     },
 
     /**
@@ -611,13 +652,23 @@ export default defineComponent({
       const set = (filter: DaysFilterType, value: string = '1') => (query[filter] = value);
 
       // Favorites
-      if (this.routeIsFavorites) {
+      if (this.routeIsFavorites || this.filteredFavorites) {
         set(DaysFilterType.FAVORITES);
       }
 
       // Videos
       if (this.routeIsVideos) {
         set(DaysFilterType.VIDEOS);
+      }
+
+      // Live photos
+      if (this.routeIsLivePhotos) {
+        set(DaysFilterType.LIVE);
+      }
+
+      // Panoramas
+      if (this.routeIsPanoramas) {
+        set(DaysFilterType.PANO);
       }
 
       // Folder
@@ -628,6 +679,14 @@ export default defineComponent({
           set(DaysFilterType.RECURSIVE);
         }
       }
+
+      // User
+      if (this.filteredUids.size > 0)
+        set(DaysFilterType.UID, Array.from(this.filteredUids).join(','));
+
+      // Media
+      if (this.filteredMedia.size > 0)
+        set(DaysFilterType.FILTER_MEDIA, Array.from(this.filteredMedia).join(','));
 
       // Archive
       if (this.routeIsArchive) {
@@ -1338,6 +1397,10 @@ export default defineComponent({
         // Add photo to row
         row.photos!.push(photo);
         delete row.pct;
+        if (photo.uid && !this.uids.has(photo.uid)) {
+          this.uids.add(photo.uid);
+          utils.bus.emit('memories:timeline:uid', photo.uid);
+        }
       }
 
       // Restore selection day

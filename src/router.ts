@@ -18,6 +18,8 @@ export type RouteId =
   | 'Folders'
   | 'Favorites'
   | 'Videos'
+  | 'LivePhotos'
+  | 'Panoramas'
   | 'Albums'
   | 'Archive'
   | 'ThisDay'
@@ -59,6 +61,21 @@ export const routes: { [key in RouteId]: RouteConfig } = {
     name: 'videos',
     props: (route: Route) => ({ rootTitle: t('memories', 'Videos') }),
   },
+
+  Panoramas: {
+    path: '/panoramas',
+    component: Timeline,
+    name: 'panoramas',
+    props: (route: Route) => ({ rootTitle: t('memories', 'Panoramas') }),
+  },
+
+  LivePhotos: {
+    path: '/livephotos',
+    component: Timeline,
+    name: 'livephotos',
+    props: (route: Route) => ({ rootTitle: t('memories', 'Live photos') }),
+  },
+
 
   Albums: {
     path: '/albums/:user?/:name?',

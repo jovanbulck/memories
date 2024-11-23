@@ -1,5 +1,6 @@
 import { generateUrl } from '@nextcloud/router';
 import type { ClusterTypes } from '@typings';
+import { translate as t } from '@services/l10n';
 
 const BASE = '/apps/memories/api';
 
@@ -20,6 +21,8 @@ function tok(url: string) {
 export const enum DaysFilterType {
   FAVORITES = 'fav',
   VIDEOS = 'vid',
+  LIVE = 'live',
+  PANO = 'pano',
   FOLDER = 'folder',
   ARCHIVE = 'archive',
   ALBUM = 'albums',
@@ -28,6 +31,8 @@ export const enum DaysFilterType {
   PLACE = 'places',
   TAG = 'tags',
   MAP_BOUNDS = 'mapbounds',
+  UID = 'uid',
+  FILTER_MEDIA = 'media',
 
   FACE_RECT = 'facerect',
   RECURSIVE = 'recursive',
@@ -36,6 +41,14 @@ export const enum DaysFilterType {
   HIDDEN = 'hidden',
   NO_PRELOAD = 'nopreload',
 }
+
+export const FilterMediaTypes = {
+  photo:      t('memories', 'Photos'),
+  video:      t('memories', 'Videos'),
+  livePhoto:  t('memories', 'Live Photos'),
+  pano:       t('memories', 'Panoramas'),
+} as const;
+export type FilterMediaType = keyof typeof FilterMediaTypes; 
 
 export class API {
   static Q(url: string, query: Record<string, string | number | undefined | boolean | null>): string {

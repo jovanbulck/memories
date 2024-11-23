@@ -115,6 +115,16 @@ class DaysController extends GenericApiController
             $transforms[] = [$this->tq, 'transformVideoFilter'];
         }
 
+        // Filter only live photos
+        if ($this->request->getParam('live')) {
+            $transforms[] = [$this->tq, 'transformLivePhotoFilter'];
+        }
+
+        // Filter only panoramas
+        if ($this->request->getParam('pano')) {
+            $transforms[] = [$this->tq, 'transformPanoFilter'];
+        }
+
         // Filter geological bounds
         if ($bounds = $this->request->getParam('mapbounds')) {
             $transforms[] = [$this->tq, 'transformMapBoundsFilter', $bounds];
@@ -123,6 +133,16 @@ class DaysController extends GenericApiController
         // Limit number of responses for day query
         if ($limit = $this->request->getParam('limit')) {
             $transforms[] = [$this->tq, 'transformLimit', (int) $limit];
+        }
+
+        // Filter on usernames
+        if ($user = $this->request->getParam('uid')) {
+            $transforms[] = [$this->tq, 'transformUser', $user];
+        }
+
+        // Filter on media type
+        if ($media = $this->request->getParam('media')) {
+            $transforms[] = [$this->tq, 'transformMedia', $media];
         }
 
         // Add extra fields for native callers

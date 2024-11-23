@@ -62,6 +62,7 @@ import ModalMixin from '@components/modal/ModalMixin';
 import AlbumPicker from '@components/modal/AlbumPicker.vue';
 import EditTags from '@components/modal/EditTags.vue';
 import UploadMenuItem from '@components/header/UploadMenuItem.vue';
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js';
 const NcTextField = () => import('@nextcloud/vue/dist/Components/NcTextField.js');
@@ -118,6 +119,12 @@ export default defineComponent({
       header.prepend(div);
       const component = new Vue({ render: (h) => h(UploadMenuItem) });
       component.$mount(div);
+
+      console.log("creating w _m = ", _m);
+      const div2 = document.createElement('div');
+      header.prepend(div2);
+      const component2 = new Vue({ render: (h) => h(FilterMenuItem) });
+      component2.$mount(div2);
     }
   },
 

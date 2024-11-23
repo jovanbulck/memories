@@ -1,6 +1,7 @@
 import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus';
 import type { FragmentName, Fragment } from './fragment';
 import type { IConfig, IPhoto } from '@typings';
+import type { FilterMediaType } from '@services/API';
 
 export type BusEvent = {
   /** Open/close the navigation drawer */
@@ -34,10 +35,20 @@ export type BusEvent = {
   'memories:timeline:deleted': IPhoto[];
   /** Viewer has requested fetching day */
   'memories:timeline:fetch-day': number;
+  /** New UID appeared in timeline */
+  'memories:timeline:uid': string;
   /** Soft-refresh the timeline */
   'memories:timeline:soft-refresh': null;
   /** Hard-refresh the timeline */
   'memories:timeline:hard-refresh': null;
+  /** Initial creation of new timeline */
+  'memories:timeline:create': null;
+
+  /** Filter this uid from the current timeline view  */
+  'memories:filter:uid': {uid: string, filter: boolean};
+  'memories:filter:media': {media: FilterMediaType, filter: boolean};
+  'memories:filter:favorites': boolean;
+
   /** Timeline recycler scrolling */
   'memories.recycler.scroll': {
     current: number;
@@ -47,6 +58,7 @@ export type BusEvent = {
 
   /** Albums were updated for these photos */
   'memories:albums:update': IPhoto[];
+
 
   /** NativeX database was updated */
   'nativex:db:updated': null;
