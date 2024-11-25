@@ -3,6 +3,7 @@ import './bootstrap';
 import Vue from 'vue';
 import App from './App.vue';
 import router, { routes } from './router';
+import * as utils from '@services/utils';
 
 // Global components
 import XImg from '@components/frame/XImg.vue';
@@ -12,6 +13,7 @@ import FilterMenuItem from '@components/header/FilterMenuItem.vue';
 // CSS for components
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import '@nextcloud/dialogs/style.css';
+import { unregisterFileListFilter } from '@nextcloud/files';
 
 // Initialize global memories object
 globalThis._m = {
@@ -37,32 +39,22 @@ globalThis._m = {
 
 router.afterEach((to, from) => {
   _m.prevPath = from.fullPath;
-  const filter = document.querySelector<HTMLDivElement>('.filter-menu');
-  const header = document.querySelector<HTMLDivElement>('.header-right');
-  if (!header) return;
-
-  // root timeline: create or replace right header filter button
-  if (to.fullPath == '/') {
-    const div = document.createElement('div');
-    if (filter)
-      header.replaceChild(div, filter);
-    else
-      header.prepend(div);
-    const component = new Vue({ render: (h) => h(FilterMenuItem) });
-    component.$mount(div);
-  }
-  // other pages: create or replace dummy placeholder for filter button
-  else if (filter) {
-    const div = document.createElement('div');
-    div.className = 'filter-menu';
-    header.replaceChild(div, filter);
-  }
-  else {
-    const div = document.createElement('div');
-    div.className = 'filter-menu';
-    header.prepend(div);
-  }
 });
+
+// Create filter menu in header
+if (!utils.isMobile()) {
+  const header = document.querySelector<HTMLDivElement>('.header-right');
+  if (header){
+      const div = document.createElement('div');
+      header.prepend(div);
+      const component = new Vue({ render: (h) => h(FilterMenuItem, {
+        props: {
+          forceInclude: true,
+        }
+      })});
+      component.$mount(div);
+  }
+}
 
 // Generate client id for this instance
 // Does not need to be cryptographically secure

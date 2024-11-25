@@ -10,7 +10,7 @@
     <div class="name">{{ name || viewname }}</div>
 
     <div class="right-actions">
-      <FilterMenuItem />
+      <FilterMenuItem v-if="name || routeIsPlacesUnassigned" />
       <NcActions :inline="0">
         <!-- root view (not cluster or unassigned) -->
         <template v-if="!name && !routeIsPlacesUnassigned">

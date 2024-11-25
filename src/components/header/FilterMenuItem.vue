@@ -1,5 +1,6 @@
 <template>
   <NcButton
+    v-if="doInclude"
     class="memories-menu-item filter-menu"
     :title="t('memories', 'Filter timeline')"
     :aria-label="t('memories', 'Filter timeline')"
@@ -102,6 +103,13 @@ export default defineComponent({
     StarIcon,
   },
 
+  props: {
+    forceInclude: {
+      type: Boolean,
+      required: false,
+    },
+  },
+
   data: () => ({
     /** Set of unique usernames in current timeline view */
     uids: [] as string[],
@@ -124,6 +132,12 @@ export default defineComponent({
   beforeDestroy() {
     utils.bus.off('memories:timeline:uid', this.refresh);
     utils.bus.off('memories:timeline:create', this.reset);
+  },
+
+  computed: {
+    doInclude() {
+        return this.forceInclude || utils.isMobile();
+    },
   },
 
   methods: {
