@@ -63,7 +63,8 @@ export default defineComponent({
       }
 
       // Only static top matter for these routes
-      if (this.routeIsTags || this.routeIsPeople || this.routeIsPlaces) {
+      if (this.routeIsTags || this.routeIsPeople || this.routeIsPlaces || 
+          this.routeIsPanoramas || this.routeIsLivePhotos || this.routeIsVideos || this.routeIsThisDay || this.routeIsFavorites || this.routeIsArchive ) {
         return String();
       }
 

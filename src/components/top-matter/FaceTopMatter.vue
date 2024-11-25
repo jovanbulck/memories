@@ -14,6 +14,7 @@
     </div>
 
     <div class="right-actions">
+      <FilterMenuItem />
       <NcActions :inline="0">
         <!-- root view (not cluster or unassigned) -->
         <template v-if="!name && routeIsRecognize && !routeIsRecognizeUnassigned">
@@ -71,6 +72,8 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
 import NcActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox.js';
 
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
+
 import FaceEditModal from '@components/modal/FaceEditModal.vue';
 import FaceDeleteModal from '@components/modal/FaceDeleteModal.vue';
 import FaceMergeModal from '@components/modal/FaceMergeModal.vue';
@@ -89,6 +92,7 @@ export default defineComponent({
     NcActions,
     NcActionButton,
     NcActionCheckbox,
+    FilterMenuItem,
     FaceEditModal,
     FaceDeleteModal,
     FaceMergeModal,

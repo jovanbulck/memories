@@ -36,6 +36,7 @@ declare global {
     route: Route;
     router: Router;
     routes: typeof routes;
+    prevPath: string;
 
     modals: {
       editMetadata: (photos: IPhoto[], sections?: number[]) => void;

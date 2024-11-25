@@ -1,12 +1,13 @@
 <template>
   <div class="top-matter">
-    <NcActions v-if="name">
+    <NcActions v-if="hasBack">
       <NcActionButton :aria-label="t('memories', 'Back')" @click="back()">
         {{ t('memories', 'Back') }}
         <template #icon> <BackIcon :size="20" /> </template>
       </NcActionButton>
     </NcActions>
     <span class="name">{{ name || viewname }}</span>
+    <FilterMenuItem/>
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import { defineComponent } from 'vue';
 
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
 
 import * as strings from '@services/strings';
 
@@ -26,6 +28,7 @@ export default defineComponent({
     NcActions,
     NcActionButton,
     BackIcon,
+    FilterMenuItem,
   },
 
   computed: {
@@ -40,6 +43,10 @@ export default defineComponent({
         default:
           return null;
       }
+    },
+
+    hasBack() {
+      return this.name ?? _m.prevPath.includes("explore");
     },
   },
 

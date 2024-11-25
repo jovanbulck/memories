@@ -7,6 +7,7 @@ import router, { routes } from './router';
 // Global components
 import XImg from '@components/frame/XImg.vue';
 import VueVirtualScroller from 'vue-virtual-scroller';
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
 
 // CSS for components
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
@@ -21,6 +22,7 @@ globalThis._m = {
   },
   router: router,
   routes: routes,
+  prevPath: '',
 
   modals: {} as any,
   sidebar: {} as any,
@@ -32,6 +34,35 @@ globalThis._m = {
     innerHeight: window.innerHeight,
   },
 };
+
+router.afterEach((to, from) => {
+  _m.prevPath = from.fullPath;
+  const filter = document.querySelector<HTMLDivElement>('.filter-menu');
+  const header = document.querySelector<HTMLDivElement>('.header-right');
+  if (!header) return;
+
+  // root timeline: create or replace right header filter button
+  if (to.fullPath == '/') {
+    const div = document.createElement('div');
+    if (filter)
+      header.replaceChild(div, filter);
+    else
+      header.prepend(div);
+    const component = new Vue({ render: (h) => h(FilterMenuItem) });
+    component.$mount(div);
+  }
+  // other pages: create or replace dummy placeholder for filter button
+  else if (filter) {
+    const div = document.createElement('div');
+    div.className = 'filter-menu';
+    header.replaceChild(div, filter);
+  }
+  else {
+    const div = document.createElement('div');
+    div.className = 'filter-menu';
+    header.prepend(div);
+  }
+});
 
 // Generate client id for this instance
 // Does not need to be cryptographically secure

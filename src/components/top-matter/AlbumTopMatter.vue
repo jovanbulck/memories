@@ -78,6 +78,8 @@
         </NcActionRadio>
       </NcActions>
 
+      <FilterMenuItem v-if="!isAlbumList" />
+
       <NcActions :inline="isMobile ? 1 : 3">
         <NcActionButton
           :aria-label="t('memories', 'Create new album')"
@@ -89,6 +91,7 @@
           {{ t('memories', 'Create new album') }}
           <template #icon> <PlusIcon :size="20" /> </template>
         </NcActionButton>
+
         <NcActionButton
           :aria-label="t('memories', 'Share album')"
           :title="t('memories', 'Share album')"
@@ -147,6 +150,8 @@ import NcActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox.js
 import NcActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio.js';
 import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator.js';
 
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
+
 import axios from '@nextcloud/axios';
 
 import AlbumCreateModal from '@components/modal/AlbumCreateModal.vue';
@@ -176,6 +181,8 @@ export default defineComponent({
     NcActionCheckbox,
     NcActionRadio,
     NcActionSeparator,
+
+    FilterMenuItem,
 
     AlbumCreateModal,
     AlbumDeleteModal,

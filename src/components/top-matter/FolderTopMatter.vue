@@ -10,6 +10,8 @@
       <NcBreadcrumb v-for="folder in list" :key="folder.idx" :name="folder.text" :to="getRoute(folder.path)" />
     </NcBreadcrumbs>
 
+    <FilterMenuItem />
+
     <div class="right-actions">
       <NcActions :inline="1">
         <NcActionButton
@@ -54,6 +56,8 @@ const NcBreadcrumb = () => import('@nextcloud/vue/dist/Components/NcBreadcrumb.j
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
 
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
+
 import * as utils from '@services/utils';
 import * as nativex from '@native';
 
@@ -71,6 +75,7 @@ export default defineComponent({
     NcBreadcrumb,
     NcActions,
     NcActionButton,
+    FilterMenuItem,
     HomeIcon,
     ShareIcon,
     TimelineIcon,

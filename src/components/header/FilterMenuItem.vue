@@ -3,8 +3,9 @@
     class="memories-menu-item filter-menu"
     :title="t('memories', 'Filter timeline')"
     :aria-label="t('memories', 'Filter timeline')"
+    type="tertiary-no-background"
   >
-    <NcActions>
+    <NcActions :forceMenu="true">
         <template #icon>
           <FilterMenuIcon :size="20" />
 				</template>

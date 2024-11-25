@@ -12,6 +12,7 @@
 
     <div class="actions">
       <UploadMenuItem />
+      <FilterMenuItem />
       <SearchbarMenuItem />
     </div>
   </div>
@@ -22,6 +23,7 @@ import { defineComponent } from 'vue';
 import { generateUrl } from '@nextcloud/router';
 
 import UploadMenuItem from '@components/header/UploadMenuItem.vue';
+import FilterMenuItem from '@components/header/FilterMenuItem.vue';
 import SearchbarMenuItem from '@components/header/SearchbarMenuItem.vue';
 
 import * as utils from '@services/utils';
@@ -32,6 +34,7 @@ export default defineComponent({
   name: 'MobileHeader',
   components: {
     UploadMenuItem,
+    FilterMenuItem,
     SearchbarMenuItem,
   },
 

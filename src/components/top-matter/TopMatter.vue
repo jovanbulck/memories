@@ -53,11 +53,17 @@ export default defineComponent({
           return AlbumTopMatter;
         case _m.routes.Places.name:
           return PlacesTopMatter;
-        case _m.routes.Tags.name:
-          return ClusterTopMatter;
         case _m.routes.Recognize.name:
         case _m.routes.FaceRecognition.name:
           return FaceTopMatter;
+        case _m.routes.Tags.name:
+        case _m.routes.Videos.name:
+        case _m.routes.LivePhotos.name:
+        case _m.routes.Panoramas.name:
+        case _m.routes.Favorites.name:
+        case _m.routes.ThisDay.name:
+        case _m.routes.Archive.name:
+          return ClusterTopMatter;
         default:
           return null;
       }
@@ -115,6 +121,8 @@ export default defineComponent({
   }
 
   :deep .right-actions {
+    display:flex;
+    align-items: center;
     margin-right: 12px;
     z-index: 50;
     @media (max-width: 768px) {

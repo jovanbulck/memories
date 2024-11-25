@@ -15,9 +15,12 @@
 
     <div class="timeline">
       <div class="timeline-header" ref="timelineHeader">
-        <div class="swiper"></div>
-        <div class="title">
-          {{ t('memories', '{photoCount} photos', { photoCount }) }}
+        <div class="right-actions">
+          <div class="swiper"></div>
+          <div class="title centered">
+            {{ t('memories', '{photoCount} photos', { photoCount }) }}
+          </div>
+          <FilterMenuItem />
         </div>
       </div>
       <div class="timeline-inner">
@@ -33,6 +36,8 @@ import Timeline from './Timeline.vue';
 const MapSplitMatter = () => import('./top-matter/MapSplitMatter.vue');
 import Hammer from 'hammerjs';
 
+import FilterMenuItem from './header/FilterMenuItem.vue';
+
 import * as utils from '@services/utils';
 
 export default defineComponent({
@@ -40,6 +45,7 @@ export default defineComponent({
 
   components: {
     Timeline,
+    FilterMenuItem,
   },
 
   data: () => ({
@@ -180,6 +186,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.right-actions {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.centered {
+    flex: 1;
+    text-align: center;
+}
+
 .split-container {
   width: 100%;
   height: 100%;
