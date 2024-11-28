@@ -4,6 +4,7 @@
     class="viewer__photosphere top-left fill-block"
   >
     <NcButton
+    v-if="!hideCloseButton"
     id="close-photosphere-viewer"
     :ariaLabel="t('memories', 'Close')"
     :title="t('memories', 'Close')"
@@ -26,6 +27,7 @@ import CloseThickIcon from 'vue-material-design-icons/CloseThick.vue';
 
 import { Viewer } from '@photo-sphere-viewer/core';
 import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
+import { events } from '@photo-sphere-viewer/core';
 import '@photo-sphere-viewer/core/index.css';
 
 export default defineComponent({
@@ -47,6 +49,7 @@ export default defineComponent({
 
   data: () => ({
     viewer: null as Viewer | null,
+    hideCloseButton: false,
   }),
 
   async mounted() {
@@ -72,6 +75,15 @@ export default defineComponent({
           autostartDelay: null,
         }],
       ],
+    });
+
+    // Hide the close button when the PhotoSphere panel is open
+    this.viewer.addEventListener('show-panel', ({ panelId : string }) => {
+      this.hideCloseButton = true;
+    });
+
+    this.viewer.addEventListener('hide-panel', ({ panelId : string }) => {
+      this.hideCloseButton = false;
     });
 
     // Handle keyboard
@@ -102,7 +114,6 @@ export default defineComponent({
     },
 
     close() {
-      this.viewer?.destroy();
       window.removeEventListener('keydown', this.handleKeydown, true);
       this.$emit('close');
     },
@@ -136,8 +147,6 @@ export default defineComponent({
     right: 0;
     top: 0;
     z-index: 9999;
-    //background-color: transparent;
-    margin-right: 10px;
   }
 }
 </style>
