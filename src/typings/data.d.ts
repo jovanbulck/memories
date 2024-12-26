@@ -101,6 +101,7 @@ declare module '@typings' {
     stackraw?: IPhoto[];
 
     uid?: string;
+    src?: string;
   };
 
   export interface IImageInfo {
