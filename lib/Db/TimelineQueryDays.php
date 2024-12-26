@@ -147,7 +147,7 @@ trait TimelineQueryDays
         $query->innerJoin('m', 'filecache', 'f', $query->expr()->eq('m.fileid', 'f.fileid'));
 
         // Filter for files in the timeline path
-        $query = $this->filterFilecache($query, null, $recursive, $archive, $hidden);
+        $query = $this->filterFilecache($query, null, $recursive, $archive, $hidden, /* sel_src= */ true);
 
         // FETCH all photos in this day
         $day = $this->executeQueryWithCTEs($query)->fetchAll();
@@ -171,14 +171,18 @@ trait TimelineQueryDays
         $params = $query->getParameters();
         $types = $query->getParameterTypes();
 
-        // Get SQL
-        $CTE_SQL = \array_key_exists('cteFoldersArchive', $params)
-            ? $this->CTE_FOLDERS_ARCHIVE()
-            : $this->CTE_FOLDERS(\array_key_exists('cteIncludeHidden', $params));
+        // Get CTE SQL
+        if (\array_key_exists('cteFoldersArchive', $params)) {
+            $ctes = [$this->CTE_FOLDERS_ALL(true), $this->CTE_FOLDERS_ARCHIVE()];
+        } else {
+            $hidden = \array_key_exists('cteIncludeHidden', $params);
+            $ctes = [$this->CTE_FOLDERS_ALL($hidden), $this->CTE_FOLDERS($hidden)];
+        }
+        $ctes[] = \array_key_exists('cteSharedAlbumFiles', $params) ? $this->CTE_SHARED_ALBUM_FILES() : $this->CTE_SHARED_ALBUM_FILES_EMPTY();
 
         // Add WITH clause if needed
-        if (str_contains($sql, 'cte_folders')) {
-            $sql = $CTE_SQL.' '.$sql;
+        if (str_contains($sql, 'cte_folders') || str_contains($sql, 'cte_saf')) {
+            $sql = $this->bundleCTEs($ctes).' '.$sql;
         }
 
         return $this->connection->executeQuery($sql, $params, $types);
@@ -199,6 +203,7 @@ trait TimelineQueryDays
         bool $recursive = true,
         bool $archive = false,
         bool $hidden = false,
+        bool $sel_src = false,
     ): IQueryBuilder {
         // Get the timeline root object
         if (null === $root) {
@@ -242,20 +247,29 @@ trait TimelineQueryDays
         // Filter by folder (recursive or otherwise)
         if ($recursive) {
             // This are used later by the execution function
-            $this->addSubfolderJoinParams($query, $root, $archive, $hidden);
+            $this->addSubfolderJoinParams($query, $root, $archive, $hidden, !$archive && $root->includeSharedAlbums());
 
-            // Subquery to test parent folder
+            // Subquery to select files in one of the timeline folders
             $sq = $query->getConnection()->getQueryBuilder();
             $sq->select($sq->expr()->literal(1))
                 ->from('cte_folders', 'cte_f')
                 ->where($sq->expr()->eq($parent, 'cte_f.fileid'))
             ;
 
-            // Filter files in one of the timeline folders
-            $query->andWhere(SQL::exists($query, $sq));
+            // Join to optionally select files in shared albums
+            $query->leftJoin('m', 'cte_shared_album_files', 'cte_saf', $query->expr()->eq('m.fileid', 'cte_saf.fileid'));
+            if ($sel_src) {
+                $query->selectAlias('cte_saf.album_path', 'src');
+            }
+
+            // Include either via the timeline paths or shared albums
+            $query->andWhere($query->expr()->orX(SQL::exists($query, $sq), $query->expr()->isNotNull('cte_saf.album_path')));
         } else {
             // If getting non-recursively folder only check for parent
             $query->andWhere($query->expr()->eq($parent, $query->createNamedParameter($root->getOneId(), IQueryBuilder::PARAM_INT)));
+            if ($sel_src) {
+                $query->selectAlias($query->expr()->literal('NULL'), 'src');
+            }
         }
 
         return $query;
@@ -360,12 +374,16 @@ trait TimelineQueryDays
         TimelineRoot &$root,
         bool $archive,
         bool $hidden,
+        bool $shared,
     ): void {
         // Add query parameters
         $query->setParameter('topFolderIds', $root->getIds(), IQueryBuilder::PARAM_INT_ARRAY);
+        $query->setParameter('uid', Util::getUID(), IQueryBuilder::PARAM_STR);
 
         if ($archive) {
             $query->setParameter('cteFoldersArchive', true, IQueryBuilder::PARAM_BOOL);
+        } elseif ($shared) {
+            $query->setParameter('cteSharedAlbumFiles', true, IQueryBuilder::PARAM_BOOL);
         }
 
         if ($hidden) {
